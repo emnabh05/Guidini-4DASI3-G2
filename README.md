@@ -7,7 +7,7 @@
 
 ---
 
-## 📌 1. Présentation du projet
+## 1. Présentation du projet
 
 **GuideMe** est une plateforme web dédiée à la découverte, à la promotion et à la réservation d'activités touristiques en Tunisie.
 
@@ -19,7 +19,7 @@ GuideMe vise ainsi à créer un environnement numérique qui facilite les échan
 
 Le projet repose sur une **architecture microservices**, permettant de répartir les différentes fonctionnalités en services indépendants, organisés autour de domaines métier spécifiques.
 
-## 🎯 2. Objectifs du projet
+## 2. Objectifs du projet
 
 Les principaux objectifs de GuideMe sont :
 
@@ -33,7 +33,7 @@ Les principaux objectifs de GuideMe sont :
 - Gérer les réclamations et les conflits entre les différents acteurs.
 - Améliorer l'expérience utilisateur grâce à un système de notifications.
 
-## 🏗️ 3. Architecture du projet
+## 3. Architecture du projet
 
 GuideMe adopte une architecture basée sur les microservices. Chaque microservice est responsable d'un domaine fonctionnel précis et possède sa propre logique métier ainsi que sa propre base de données.
 
@@ -48,7 +48,7 @@ Ensemble de sept microservices indépendants assurant la gestion des fonctionnal
 ### Documentation
 Contient les diagrammes UML, les diagrammes de classes, les diagrammes de séquence et les documents de présentation du projet.
 
-## 📂 4. Structure du projet
+## 4. Structure du projet
 
 ```text
 GuideMe/
@@ -61,12 +61,12 @@ GuideMe/
 │
 ├── backend/
 │   ├── ms1-users/
-│   ├── ms2-activities-offers/
+│   ├── ms2-products-offers/
 │   ├── ms3-reservations-payments/
-│   ├── ms4/
-│   ├── ms5/
+│   ├── ms4-missions-offers/
+│   ├── ms5-ai-recommendations/
 │   ├── ms6-posts/
-│   └── ms7-notifications/
+│   └── ms7-complaints-notifications/
 │
 ├── .gitignore
 └── README.md
@@ -154,7 +154,7 @@ Chaque microservice dispose d'une base de données adaptée à ses besoins :
 
 Cette séparation permet de limiter le couplage entre les services et de favoriser leur indépendance.
 
-## 🔄 7. Communication entre les microservices
+## 7. Communication entre les microservices
 
 Les microservices communiquent à travers des interfaces API REST.
 
@@ -166,7 +166,7 @@ Cette organisation permet :
 - L'indépendance des microservices.
 - Une meilleure évolutivité et une maintenance facilitée.
 
-## 🚀 8. Installation et lancement
+## 8. Installation et lancement
 
 ### Prérequis
 
@@ -204,7 +204,7 @@ Consulter le README ou les fichiers de configuration de chaque microservice pour
 
 Accéder au dossier `Frontend` et suivre les instructions d'installation et de lancement correspondant à son environnement technique.
 
-## 👥 9. Équipe projet
+## 9. Équipe projet
 
 GuideMe est un projet académique réalisé dans le cadre du cycle ingénieur à l'**École Supérieure Privée d'Ingénierie et de Technologies (ESPRIT)**.
 
@@ -220,7 +220,7 @@ GuideMe est un projet académique réalisé dans le cadre du cycle ingénieur à
 
 ---
 
-## 🌍 10. Notre vision
+##  10. Notre vision
 
 GuideMe ambitionne de rendre les expériences touristiques tunisiennes plus accessibles, plus visibles et plus faciles à réserver.
 
