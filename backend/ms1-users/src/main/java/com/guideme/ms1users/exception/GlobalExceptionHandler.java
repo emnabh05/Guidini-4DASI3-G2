@@ -43,7 +43,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> invalidRole(InvalidRoleException ex) {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
-
+    @ExceptionHandler(InvalidOperationException.class)
+    public ResponseEntity<Map<String, Object>> invalidOperation(InvalidOperationException ex) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
     private ResponseEntity<Map<String, Object>> build(HttpStatus status, String message) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
