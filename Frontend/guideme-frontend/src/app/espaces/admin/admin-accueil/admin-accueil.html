@@ -1,0 +1,228 @@
+﻿<div class="admin" id="dashboard">
+  <app-admin-navigation [nav]="nav" (search)="query.set($event)" (action)="open($event)" />
+  <main>
+    <section class="welcome">
+      <h1>Bonjour Admin <span>👋</span></h1>
+      <p>Gérez et supervisez l’ensemble de la plateforme Guidini.</p>
+    </section>
+    <div class="content">
+      <section class="stats" aria-label="Indicateurs de démonstration">
+        @for (s of stats; track s.label) {
+          <article [class]="'stat ' + s.tone">
+            <span class="stat-icon"
+              ><svg viewBox="0 0 24 24"><path [attr.d]="s.icon" /></svg
+            ></span>
+            <div>
+              <strong>{{ s.value }}</strong>
+              <h2>{{ s.label }}</h2>
+            </div>
+            <span class="delta" [class.warning]="s.tone === 'pink'">↑ {{ s.delta }}</span
+            ><svg class="wave" viewBox="0 0 330 40" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M0 40H330V9C250-5 230 42 130 40Z" />
+            </svg>
+          </article>
+        }
+      </section>
+      <div class="middle-grid">
+        <section class="panel reservations">
+          <header>
+            <h2>
+              <svg viewBox="0 0 24 24"><path [attr.d]="nav[6].icon" /></svg>Évolution des
+              réservations
+            </h2>
+            <select
+              aria-label="Période des réservations"
+              [value]="period()"
+              (change)="period.set($any($event.target).value)"
+            >
+              <option value="6m">6 derniers mois</option>
+              <option value="12m">12 derniers mois</option>
+            </select>
+          </header>
+          <svg
+            class="chart"
+            viewBox="0 0 550 225"
+            role="img"
+            aria-label="Évolution des réservations, données de démonstration"
+          >
+            <defs>
+              <linearGradient id="booking-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#2196f3" stop-opacity=".6" />
+                <stop offset="1" stop-color="#2196f3" stop-opacity=".08" />
+              </linearGradient>
+            </defs>
+            @for (v of [0, 250, 500, 750, 1000, 1250]; track v) {
+              <line
+                x1="30"
+                x2="530"
+                [attr.y1]="190 - (v / 1250) * 150"
+                [attr.y2]="190 - (v / 1250) * 150"
+                stroke="#edf2fc"
+              />
+              <text x="16" [attr.y]="195 - (v / 1250) * 150" text-anchor="end">
+                {{ v.toLocaleString('fr-FR') }}
+              </text>
+            }
+            <path d="M30 38V190H530" fill="none" stroke="#d2dcf4" />
+            <path [attr.d]="area" fill="url(#booking-fill)" />
+            <path [attr.d]="line" fill="none" stroke="#0084ff" stroke-width="3.5" />
+            @for (p of points; track $index) {
+              <circle [attr.cx]="p.x" [attr.cy]="p.y" r="4.5" fill="#0084ff">
+                <title>{{ months[$index] }} : {{ p.value }}</title>
+              </circle>
+              <text [attr.x]="p.x" y="214" text-anchor="middle">{{ months[$index] }}</text>
+            }
+          </svg>
+        </section>
+        <section class="panel products">
+          <header>
+            <h2>
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2v10h10A10 10 0 0012 2zM9 3a10 10 0 1012 12H9z" /></svg
+              >Répartition des produits
+            </h2>
+          </header>
+          <div class="product-status">
+            <div
+              class="donut"
+              role="img"
+              aria-label="356 produits : activités 48 %, circuits 27 %, offres 17 %, autres 8 %"
+            >
+              <div><strong>356</strong><span>Produits</span></div>
+            </div>
+            <ul>
+              @for (c of categories; track c.name) {
+                <li><i [style.background]="c.color"></i>{{ c.name }} ({{ c.value }}%)</li>
+              }
+            </ul>
+          </div>
+        </section>
+        <section class="panel quick">
+          <header>
+            <h2>
+              <svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 10-13h-8z" /></svg>Actions rapides
+            </h2>
+          </header>
+          <div class="quick-grid">
+            @for (a of quick; track a.label) {
+              <button (click)="open(a.label)">
+                <svg viewBox="0 0 24 24"><path [attr.d]="a.icon" /></svg><span>{{ a.label }}</span>
+              </button>
+            }
+          </div>
+        </section>
+      </div>
+      <div class="bottom-grid">
+        <section class="panel activities">
+          <header>
+            <h2>
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 5v7l5 3" /></svg
+              >Activités récentes
+            </h2>
+            <button
+              class="see-all"
+              (click)="expanded.set(!expanded())"
+              [attr.aria-expanded]="expanded()"
+            >
+              {{ expanded() ? 'Réduire' : 'Voir tout' }} <span aria-hidden="true">→</span>
+            </button>
+          </header>
+          <ol>
+            @for (
+              a of filteredActivities.slice(0, expanded() ? filteredActivities.length : 4);
+              track $index
+            ) {
+              <li>
+                <svg viewBox="0 0 24 24" [style.color]="a.color"><path [attr.d]="a.icon" /></svg
+                ><span>{{ a.text }}</span
+                ><time>{{ a.time }}</time>
+              </li>
+            } @empty {
+              <li>Aucun résultat pour « {{ query() }} ».</li>
+            }
+          </ol>
+        </section>
+        <section class="panel services">
+          <header>
+            <h2>
+              <svg viewBox="0 0 24 24">
+                <path d="M2 7l10-5 10 5-10 5zM2 12l10 5 10-5M2 17l10 5 10-5" /></svg
+              >État des microservices
+            </h2>
+          </header>
+          <div class="service-grid">
+            @for (s of services; track s; let i = $index) {
+              <article
+                title="État simulé : service disponible. Non connecté à une API de santé."
+                aria-label="État de démonstration : disponible"
+              >
+                <span class="service-dot"></span><b>MS{{ i + 1 }}</b
+                ><small>{{ s }}</small>
+              </article>
+            }
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+  @if (modal()) {
+    <div class="modal-backdrop" (click)="modal.set('')">
+      <section
+        class="dialog"
+        role="dialog"
+        aria-modal="true"
+        [attr.aria-label]="modal()"
+        (click)="$event.stopPropagation()"
+        (keydown.escape)="modal.set('')"
+      >
+        <header>
+          <h2>{{ modal() }}</h2>
+          <button (click)="modal.set('')" aria-label="Fermer">×</button>
+        </header>
+        <p class="demo-note">Mode démonstration · les modifications restent locales.</p>
+        @if (modal() === 'Ajouter un produit' || modal() === 'Créer un utilisateur') {
+          <form (ngSubmit)="save()">
+            <label
+              >{{ modal() === 'Ajouter un produit' ? 'Nom du produit' : 'Nom de l’utilisateur'
+              }}<input name="name" [(ngModel)]="draft" required autofocus /></label
+            ><button class="save" type="submit" [disabled]="!draft.trim()">Enregistrer</button>
+          </form>
+        } @else if (modal() === 'Valider des offres' || modal() === 'Produits & Offres') {
+          <ul>
+            @for (o of offers; track o) {
+              <li>{{ o }} <button (click)="approve(o)">Valider</button></li>
+            } @empty {
+              <li>Aucune offre en attente.</li>
+            }
+          </ul>
+        } @else if (modal() === 'Notifications') {
+          <ul>
+            @for (a of activities; track $index) {
+              <li>{{ a.text }}</li>
+            }
+          </ul>
+        } @else if (modal() === 'Rapports & Statistiques') {
+          <button class="save" (click)="open('Générer un rapport')">
+            Télécharger le rapport CSV
+          </button>
+        } @else if (modal() === 'Aide') {
+          <p>
+            Recherchez une activité dans la barre supérieure, changez la période du graphique ou
+            utilisez les actions rapides.
+          </p>
+        } @else if (modal() === 'Profil administrateur') {
+          <p>Admin · Administrateur Guidini</p>
+        } @else {
+          <p>Cette section n’est pas encore reliée à son microservice.</p>
+        }
+      </section>
+    </div>
+  }
+  @if (notice()) {
+    <div class="toast" role="status">
+      {{ notice() }}<button (click)="notice.set('')" aria-label="Fermer">×</button>
+    </div>
+  }
+</div>

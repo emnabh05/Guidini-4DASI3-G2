@@ -1,0 +1,178 @@
+<div class="page" [style.zoom]="zoom()">
+<header class="top">
+  <a routerLink="/touriste" class="logo">
+    <svg width="34" height="46" viewBox="0 0 40 46" aria-hidden="true">
+      <path d="M20 0C9 0 1 8 1 18c0 12 19 28 19 28s19-16 19-28C39 8 31 0 20 0z" fill="#f26a1b" />
+      <path d="M29 11l-7 7-10-3-2 2 8 4-3 6-3 .5 1 2 4-1 4 1 .5-3 4-3 3 6 2-2-3-9 6-6c1-1 0-3-2-2z" fill="#fff" transform="translate(0 1) scale(.9)" />
+    </svg>
+    <span class="brand"><b>Guidini</b><small>Explore · Réservez · Vivez la Tunisie</small></span>
+  </a>
+
+  <nav class="links">
+    @for (n of nav; track n.label) {
+      <a [routerLink]="n.link" [class.active]="n.active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          @for (p of n.paths; track p) { <path [attr.d]="p" /> }
+        </svg>
+        {{ n.label }}
+      </a>
+    }
+  </nav>
+
+  <div class="right">
+    <a href="#" class="mini fav-l">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-8-5-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 9c0 6-8 11-8 11z" /></svg>
+      Mes favoris
+    </a>
+    <a href="#" class="mini res-l">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4M7 14h2M11 14h2M15 14h2" /></svg>
+      Mes réservations
+    </a>
+    <button class="bell" type="button" aria-label="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0112 0v6l2 2H4z" /><path d="M10 21h4" /></svg>
+      <i class="dot"></i>
+    </button>
+    <button class="user um" type="button" (click)="menuOpen.set(!menuOpen())" [attr.aria-expanded]="menuOpen()">
+      <img [src]="user.avatar" alt="" />
+      <span><b>{{ user.name }}</b><small>{{ user.role }}</small></span>
+      <svg class="chev" width="14" height="9" viewBox="0 0 12 8"><path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /></svg>
+    </button>
+@if (menuOpen()) {
+  <div class="menu um" role="menu">
+    <button type="button" class="logout" role="menuitem" (click)="logout()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" /></svg>Déconnexion</button>
+  </div>
+}
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-text">
+    <h1><span class="l1">Découvrez la <em>Tunisie</em></span><span class="l2">avec Guidini</span></h1>
+    <p>Activités authentiques, circuits uniques et<br />expériences inoubliables, en toute simplicité.</p>
+  </div>
+
+  <form class="search" (ngSubmit)="search()">
+    <label class="fld dest">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 21s-7-6-7-11a7 7 0 0114 0c0 5-7 11-7 11z" /><circle cx="12" cy="10" r="2.5" /></svg>
+      <input name="dest" [(ngModel)]="destination" placeholder="Où voulez-vous aller ?" autocomplete="off" />
+    </label>
+    <label class="fld date">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4M7 14h2M11 14h2M15 14h2" /></svg>
+      <input name="date" [type]="dateType" (focus)="dateType = 'date'" (blur)="!date && (dateType = 'text')" [(ngModel)]="date" placeholder="Dates" />
+    </label>
+    <label class="fld trav">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="9" cy="8" r="3" /><path d="M3 20c0-5 12-5 12 0M16 5a3 3 0 010 6M18 15c2 .8 3 2.5 3 5" /></svg>
+      <input name="trav" type="number" min="1" [(ngModel)]="travelers" placeholder="Voyageurs" />
+    </label>
+    <button type="submit" class="go">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7" /><path d="M16.5 16.5L21 21" /></svg>
+      Rechercher
+    </button>
+  </form>
+
+  <div class="chips">
+    @for (c of categories; track c.label) {
+      <button type="button" class="chip" [class.on]="activeCat() === c.label" (click)="pickCat(c.label)">
+        <svg viewBox="0 0 24 24" fill="none" [attr.stroke]="c.color" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          @for (p of c.paths; track p) { <path [attr.d]="p" /> }
+        </svg>
+        {{ c.label }}
+      </button>
+    }
+  </div>
+</section>
+
+<section class="reco" id="recommandes">
+  <div class="head">
+    <h2>
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f26a1b" stroke-width="2" stroke-linecap="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8" /></svg>
+      Recommandé pour vous
+    </h2>
+    <a href="#">Voir tout <svg width="18" height="14" viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h15M10 1l6 6-6 6" /></svg></a>
+  </div>
+
+  <div class="carousel">
+    <button class="arrow l" type="button" aria-label="Précédent" (click)="scroll(-1)">
+      <svg width="12" height="18" viewBox="0 0 12 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2L3 9l7 7" /></svg>
+    </button>
+    <div class="track" #track>
+      @for (e of filtered; track e.title) {
+        <article class="card">
+          <div class="photo" [style.background-image]="'url(' + e.img + ')'">
+            <button class="fav" type="button" aria-label="Favori" [class.on]="favorites().has(e.title)" (click)="toggleFav(e.title)">
+              <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" [attr.fill]="favorites().has(e.title) ? 'currentColor' : 'none'"><path d="M12 20s-8-5-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 9c0 6-8 11-8 11z" /></svg>
+            </button>
+            <h3>{{ e.title }}</h3>
+          </div>
+          <div class="meta">
+            <div class="dur">
+              @if (e.multi) {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4M7 14h2M11 14h2M15 14h2" /></svg>
+              } @else {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
+              }
+              {{ e.duration }}
+            </div>
+            <div class="row">
+              <span class="rate"><svg viewBox="0 0 24 24" width="17" height="17"><path fill="#f5a623" d="M12 2l3 6.5 7 .8-5.2 4.8 1.5 7L12 17.5 5.7 21l1.5-7L2 9.3l7-.8z" /></svg><b>{{ e.rating }}</b> ({{ e.reviews }} avis)</span>
+              <span class="price">À partir de {{ e.price }} DT</span>
+            </div>
+          </div>
+        </article>
+      } @empty {
+        <p class="empty">Aucune expérience ne correspond à votre recherche.</p>
+      }
+    </div>
+    <button class="arrow r" type="button" aria-label="Suivant" (click)="scroll(1)">
+      <svg width="12" height="18" viewBox="0 0 12 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l7 7-7 7" /></svg>
+    </button>
+  </div>
+</section>
+
+<section class="duo">
+  <div class="offers">
+    <img class="gift" src="/touriste/gift.jpg" alt="" />
+    <div class="txt">
+      <h3>Offres spéciales</h3>
+      <p>Profitez de nos meilleurs circuits<br />à prix réduits !</p>
+      <a href="#" class="btn">Voir les offres
+        <svg width="16" height="12" viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h15M10 1l6 6-6 6" /></svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="trips">
+    <h3>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4M7 14h2M11 14h2M15 14h2" /></svg>
+      Mes prochains voyages
+    </h3>
+    @for (t of trips; track t.title) {
+      <div class="trip">
+        <img [src]="t.img" alt="" />
+        <div class="info">
+          <b>{{ t.title }}</b>
+          <div class="sub">
+            <span class="d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4M7 14h2M11 14h2M15 14h2" /></svg>{{ t.date }}</span>
+            <span class="p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="9" cy="8" r="3" /><path d="M3 20c0-5 12-5 12 0M16 5a3 3 0 010 6M18 15c2 .8 3 2.5 3 5" /></svg>{{ t.people }} personnes</span>
+          </div>
+        </div>
+        <span class="status">{{ t.status }}</span>
+        <button type="button" class="go-trip" aria-label="Détails">
+          <svg width="12" height="18" viewBox="0 0 12 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l7 7-7 7" /></svg>
+        </button>
+      </div>
+    }
+  </div>
+</section>
+
+<section class="trust">
+  @for (t of trust; track t.label) {
+    <div class="t">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#0b2a6f" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+        @for (p of t.paths; track p) { <path [attr.d]="p" /> }
+      </svg>
+      <b>{{ t.label }}</b>
+    </div>
+  }
+</section>
+</div>
