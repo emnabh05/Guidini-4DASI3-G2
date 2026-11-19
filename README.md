@@ -61,7 +61,7 @@ GuideMe/
 │
 ├── backend/
 │   ├── ms1-users/
-│   ├── ms2-products-offers/
+│   ├── ms2-produit-et-offreTouristique/
 │   ├── ms3-reservations-payments/
 │   ├── ms4-missions-offers/
 │   ├── ms5-ai-recommendations/
