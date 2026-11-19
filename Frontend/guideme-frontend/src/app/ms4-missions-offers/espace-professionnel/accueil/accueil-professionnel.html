@@ -1,0 +1,77 @@
+<ng-template #icone let-nom>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path [attr.d]="icones[nom]" />
+  </svg>
+</ng-template>
+
+<section class="banniere">
+  <h1>Bonjour Amine <span aria-hidden="true">👋</span></h1>
+  <p class="bienvenue">Bienvenue sur Guidini ! Gérez vos missions, offres et invitations en toute simplicité.</p>
+</section>
+    <div class="tableau-bord">
+      <section class="indicateurs" aria-label="Résumé de votre activité">
+        <a routerLink="/missions" class="indicateur">
+          <span class="indicateur-icone bleu"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'brief' }" /></span>
+          <span><strong>5</strong><small>Missions</small></span>
+          <span class="tendance" aria-label="Hausse de 25 %">↑ +25%</span>
+        </a>
+        <a routerLink="/professionnel/invitations" class="indicateur">
+          <span class="indicateur-icone orange"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'mail' }" /></span>
+          <span><strong>{{ etat.enAttente() }}</strong><small>Invitations</small></span>
+          <span class="tendance" aria-label="Hausse de 50 %">↑ +50%</span>
+        </a>
+        <a routerLink="/professionnel/offres" class="indicateur">
+          <span class="indicateur-icone violet"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'brief' }" /></span>
+          <span><strong>{{ offresEtat.publiees().length }}</strong><small>Offres publiées</small></span>
+        </a>
+        <a routerLink="/prestataire" fragment="reservations" class="indicateur">
+          <span class="indicateur-icone bleu"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'calendar' }" /></span>
+          <span><strong>1</strong><small>Réservation</small></span>
+        </a>
+        <div class="indicateur">
+          <span class="indicateur-icone rose"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'star' }" /></span>
+          <span><strong>4.8/5</strong><small>Évaluation</small></span>
+        </div>
+      </section>
+
+      <div class="tableau-grille">
+        <section class="panneau missions-moment">
+          <div class="panneau-titre">
+            <h2><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'brief' }" />Mes missions du moment</h2>
+            <a class="lien-action lien-bleu" routerLink="/missions">Voir tout <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'arrow' }" /></a>
+          </div>
+          @for (entree of missionsDuMoment; track entree.mission.id) {
+            <article class="mission-moment">
+              <img [src]="entree.mission.image" alt="" />
+              <div class="moment-texte">
+                <h3>{{ entree.mission.titre }}</h3>
+                <p class="meta"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'pin' }" />{{ entree.mission.lieu }}</p>
+                <p class="meta"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'calendar' }" />{{ entree.mission.dates }}</p>
+              </div>
+              <span class="statut" [class.attente]="entree.statut === 'En attente'">{{ entree.statut }}</span>
+              <button type="button" class="ic-bouton detail-mission" [attr.aria-label]="'Détails de ' + entree.mission.titre"
+                      (click)="etat.ouvrir(entree.mission, 'details')">
+                <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'chevron' }" />
+              </button>
+            </article>
+          }
+        </section>
+
+        <app-panneau-professionnel section="invitations" />
+        <app-panneau-professionnel section="offres" [detailOffre]="true" />
+
+        <section class="panneau profil">
+          <div class="panneau-titre">
+            <h2><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'person' }" />Mon profil professionnel</h2>
+            <span class="pourcentage">Profil complété à 90%</span>
+          </div>
+          <progress value="90" max="100" aria-label="Profil professionnel complété à 90 %">90%</progress>
+          <ul>
+            @for (rubrique of rubriquesProfil; track rubrique) {
+              <li><span class="profil-coche"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'check' }" /></span>{{ rubrique }}</li>
+            }
+          </ul>
+        </section>
+      </div>
+    </div>

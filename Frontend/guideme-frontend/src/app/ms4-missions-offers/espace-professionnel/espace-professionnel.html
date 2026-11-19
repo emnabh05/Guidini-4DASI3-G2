@@ -1,0 +1,8 @@
+<app-navbar-espace espace="professionnel" [invitationsEnAttente]="etat.enAttente()" />
+
+<main>
+  <p class="sr-only" role="status">{{ etat.message() }}</p>
+  @if (etat.message()) { <div class="confirmation">{{ etat.message() }}</div> }
+  <router-outlet (activate)="etat.message.set(''); etat.action.set(null)" />
+</main>
+<app-dialogue-mission />

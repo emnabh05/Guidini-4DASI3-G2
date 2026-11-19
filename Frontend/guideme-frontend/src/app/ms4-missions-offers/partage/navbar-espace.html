@@ -1,0 +1,42 @@
+<header class="barre">
+  <a [routerLink]="liens()[0].route" class="logo">
+    <svg width="38" height="46" viewBox="0 0 40 46" aria-hidden="true">
+      <path d="M20 0C9 0 1 8 1 18c0 12 19 28 19 28s19-16 19-28C39 8 31 0 20 0z" fill="#f26a1b" />
+      <path d="M29 11l-7 7-10-3-2 2 8 4-3 6-3 .5 1 2 4-1 4 1 .5-3 4-3 3 6 2-2-3-9 6-6c1-1 0-3-2-2z" fill="#fff" transform="translate(0 1) scale(.9)" />
+    </svg>
+    <span><strong>Guidini</strong><small>{{ estProfessionnel() ? 'Espace Professionnel' : 'Espace Prestataire' }}</small></span>
+  </a>
+  <nav [attr.aria-label]="estProfessionnel() ? 'Navigation professionnelle' : 'Navigation prestataire'">
+    @for (lien of liens(); track lien.label) {
+      @if (lien.route) {
+        <a [routerLink]="lien.route" [fragment]="lien.fragment" routerLinkActive="active" ariaCurrentWhenActive="page"
+           [routerLinkActiveOptions]="{paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'exact'}">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path [attr.d]="lien.icone" /></svg>{{ lien.label }}
+          @if (lien.route === '/professionnel/invitations' && invitationsEnAttente()) { <span class="point" aria-hidden="true"></span> }
+        </a>
+      } @else {
+        <button disabled type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path [attr.d]="lien.icone" /></svg>{{ lien.label }}</button>
+      }
+    }
+  </nav>
+  <div class="outils">
+    <a class="cloche" [routerLink]="estProfessionnel() ? '/professionnel/invitations' : '/prestataire/missions'"
+       [fragment]="estProfessionnel() ? undefined : 'recherche'"
+       [attr.aria-label]="estProfessionnel() ? invitationsEnAttente() + ' invitations en attente' : 'Recherche et invitations'">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9m-8 12a2 2 0 0 0 4 0" /></svg>
+      @if (estProfessionnel() && invitationsEnAttente()) { <span class="pastille" aria-hidden="true">{{ invitationsEnAttente() }}</span> }
+    </a>
+    @if (estProfessionnel()) {
+      <a class="cloche" routerLink="/professionnel/invitations" aria-label="Mes invitations"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3zM3 6l9 7 9-7" /></svg></a>
+    }
+    <details>
+      <summary>
+        @if (estProfessionnel()) { <span class="initiales" aria-hidden="true">AB</span> }
+        @else { <img src="/prestataire/avatar.jpg" alt="" /> }
+        <span class="identite"><b>{{ estProfessionnel() ? 'Amine Ben Ali' : 'Agence Tunivoyages' }}</b><small>{{ estProfessionnel() ? 'Guide touristique' : 'Prestataire touristique' }}</small></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+      </summary>
+      <button type="button" (click)="logout()">Déconnexion</button>
+    </details>
+  </div>
+</header>

@@ -1,0 +1,81 @@
+<ng-template #icone let-nom>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path [attr.d]="icones[nom]" />
+  </svg>
+</ng-template>
+
+<section class="banniere">
+  <h1>Missions disponibles</h1>
+  <p>Découvrez les missions qui correspondent à votre profil et postulez facilement.</p>
+</section>
+    <form class="filtres" aria-label="Filtrer les missions" (ngSubmit)="filtrer()">
+      <label class="champ recherche">
+        <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'search' }" />
+        <input type="search" name="recherche" [(ngModel)]="recherche"
+               placeholder="Rechercher une mission..." aria-label="Rechercher une mission" />
+      </label>
+      <label class="champ">
+        <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'pin' }" />
+        <select name="lieu" [(ngModel)]="lieu" aria-label="Lieu">
+          <option value="">Lieu</option>
+          @for (option of lieux; track option) { <option [value]="option">{{ option }}</option> }
+        </select>
+        <span class="fleche"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'chevron' }" /></span>
+      </label>
+      <label class="champ">
+        <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'calendar' }" />
+        <select name="periode" [(ngModel)]="periode" aria-label="Période">
+          <option value="">Période</option><option value="2026-12">Décembre 2026</option><option value="2027-01">Janvier 2027</option>
+        </select>
+        <span class="fleche"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'chevron' }" /></span>
+      </label>
+      <label class="champ">
+        <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'brief' }" />
+        <select name="type" [(ngModel)]="type" aria-label="Type de prestation">
+          <option value="">Type (Guide / Chauffeur)</option><option>Guide touristique</option><option>Chauffeur</option>
+        </select>
+        <span class="fleche"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'chevron' }" /></span>
+      </label>
+      <button class="principal" type="submit"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'filter' }" />Filtrer</button>
+    </form>
+
+    <div class="grille">
+      <section class="liste-missions" aria-label="Résultats des missions">
+        @for (mission of resultats(); track mission.id) {
+          <article class="carte-mission">
+            <img class="photo-mission" [src]="mission.image" alt="" />
+            <div class="mission-texte">
+              <h2>{{ mission.titre }}</h2>
+              <p class="meta"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'pin' }" />{{ mission.lieu }}</p>
+              <div class="mission-meta">
+                <span class="meta"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'calendar' }" />{{ mission.dates }}</span>
+                <span class="meta"><ng-container *ngTemplateOutlet="icone; context: { $implicit: mission.type === 'Chauffeur' ? 'car' : 'people' }" />{{ mission.effectif }}</span>
+                <span class="type">{{ mission.type }}</span>
+              </div>
+            </div>
+            <div class="mission-actions">
+              <span class="tarif">{{ etat.montant(mission.tarif) }}</span>
+              <button class="principal" type="button" [disabled]="etat.candidatures().has(mission.id)"
+                      (click)="etat.ouvrir(mission, 'postuler')">
+                <ng-container *ngTemplateOutlet="icone; context: { $implicit: etat.candidatures().has(mission.id) ? 'check' : 'send' }" />
+                {{ etat.candidatures().has(mission.id) ? 'Candidature faite' : 'Postuler' }}
+              </button>
+            </div>
+            <button class="ic-bouton favori" type="button" [class.choisi]="etat.favoris().has(mission.id)"
+                    [attr.aria-pressed]="etat.favoris().has(mission.id)" [attr.aria-label]="'Favori : ' + mission.titre"
+                    (click)="etat.basculerFavori(mission.id)"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'heart' }" /></button>
+          </article>
+        } @empty {
+          <div class="vide">
+            <h2>Aucune mission trouvée</h2>
+            <button type="button" class="lien-action" (click)="reinitialiser()">Réinitialiser les filtres</button>
+          </div>
+        }
+      </section>
+
+      <aside class="activite" aria-label="Mes invitations et offres">
+        <app-panneau-professionnel section="invitations" />
+        <app-panneau-professionnel section="offres" />
+      </aside>
+    </div>

@@ -1,0 +1,93 @@
+:host {
+  display: block;
+  position: relative;
+  z-index: 20;
+  color: #0b2a6f;
+  font-family: 'Plus Jakarta Sans', 'Poppins', sans-serif;
+  letter-spacing: normal;
+}
+.top { position: relative; height: 78px; background: #fff; box-shadow: 0 1px 0 #eef1f7; }
+.top > * { position: absolute; }
+.logo { left: 2.87%; top: 11px; display: flex; align-items: center; gap: 10px; }
+.brand { display: flex; flex-direction: column; line-height: 1; }
+.brand b { font-size: 35px; font-weight: 700; letter-spacing: -1.4px; }
+.brand small { font-size: 15.5px; font-weight: 500; margin-top: 3px; letter-spacing: -.2px; white-space: nowrap; }
+.links { inset: 0; pointer-events: none; }
+.links a {
+  position: absolute;
+  isolation: isolate;
+  top: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 42px;
+  border-radius: 999px;
+  font-size: 15.7px;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: auto;
+}
+.links a:first-child { left: 19.02%; padding-inline: 22px; }
+.links a:nth-child(2) { left: 29.13%; }
+.links a:nth-child(3) { left: 40.13%; }
+.links a:nth-child(4) { left: 50.36%; }
+.links a:nth-child(5) { left: 61.54%; }
+.links a:nth-child(6) { left: 72.79%; }
+.links a svg { flex: none; width: 28px; height: 28px; }
+.links a.active { color: #1a56db; }
+.links a.active::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0 -14px;
+  border-radius: inherit;
+  background: #dfeafb;
+}
+.links a:first-child.active::before { inset-inline: 0; }
+.links a:hover:not(.active) { color: #d9570d; }
+.bell { left: 82.54%; top: 20px; }
+.bell svg { width: 31px; height: 31px; display: block; }
+.dot { position: absolute; top: -1px; right: -1px; width: 13px; height: 13px; border-radius: 50%; background: #ff3b30; border: 2px solid #fff; }
+.sep { left: 80.86%; top: 20px; width: 1px; height: 36px; background: #e6ebf4; }
+.user { right: 14px; top: 15px; height: 46px; display: flex; align-items: center; gap: 11px; background: none; border: 0; color: inherit; }
+.user img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
+.user b { font-size: 13px; font-weight: 700; letter-spacing: -.3px; white-space: nowrap; }
+.menu { right: 14px; top: 66px; width: 200px; padding: 8px; background: #fff; border-radius: 12px; box-shadow: 0 10px 30px #0b2a6f2e; border: 1px solid #e8edf6; }
+.logout { width: 100%; display: flex; align-items: center; gap: 10px; padding: 11px 14px; border: 0; border-radius: 8px; background: none; color: #d93025; font-size: 15px; font-weight: 600; }
+.logout svg { width: 20px; height: 20px; }
+.logout:hover { background: #fdecea; }
+a:focus-visible, button:focus-visible { outline: 2px solid #1765ef; outline-offset: 3px; }
+
+.top:not(.fixe) { height: 70px; }
+.top:not(.fixe) .logo { top: 10px; }
+.top:not(.fixe) .logo > svg { width: 33px; height: 41px; }
+.top:not(.fixe) .brand b { font-size: 30px; }
+.top:not(.fixe) .brand small { font-size: 14px; }
+.top:not(.fixe) .links a { top: 16px; height: 38px; font-size: 14.5px; }
+.top:not(.fixe) .links a svg { width: 25px; height: 25px; }
+.top:not(.fixe) .bell, .top:not(.fixe) .sep { top: 17px; }
+.top:not(.fixe) .bell svg { width: 27px; height: 27px; }
+.top:not(.fixe) .user { top: 12px; }
+.top:not(.fixe) .user img { width: 39px; height: 39px; }
+.top:not(.fixe) .menu { top: 60px; }
+
+@media (max-width: 1400px) {
+  .top:not(.fixe) { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 7px 20px; height: auto; min-height: 70px; }
+  .top:not(.fixe) > :is(.logo, .links, .bell, .user) { position: relative; inset: auto; }
+  .top:not(.fixe) .logo, .top:not(.fixe) .user { flex: none; }
+  .top:not(.fixe) .sep { display: none; }
+  .top:not(.fixe) .links { display: flex; align-items: center; min-width: 0; padding: 3px; overflow-x: auto; }
+  .top:not(.fixe) .links a { position: relative; left: auto; top: auto; padding-inline: 10px; font-size: .9rem; }
+  .top:not(.fixe) .links a.active::before { inset-inline: 0; }
+  .top:not(.fixe) .links a svg { width: 22px; height: 22px; }
+}
+@media (max-width: 1030px) {
+  .top:not(.fixe) { flex-wrap: wrap; gap: 8px; }
+  .top:not(.fixe) .links { order: 1; width: 100%; }
+  .top:not(.fixe) .bell { margin-left: auto; margin-right: 8px; }
+}
+@media (max-width: 500px) {
+  .top:not(.fixe) { padding-inline: 14px; }
+  .top:not(.fixe) .user b { display: none; }
+  .top:not(.fixe) .brand b { font-size: 28px; }
+}

@@ -1,0 +1,182 @@
+<section class="banniere">
+  <h1>Mes offres de prestation</h1>
+  <p class="bienvenue">Publiez et gérez vos offres de services (guide ou chauffeur) en précisant vos services, tarifs et disponibilités.</p>
+</section>
+
+<ng-template #icone let-nom>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path [attr.d]="icones[nom]" />
+  </svg>
+</ng-template>
+
+<div class="offres-page">
+  <section class="barre-filtres" aria-label="Filtrer les offres">
+    <label class="champ recherche">
+      <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'search' }" />
+      <input type="search" aria-label="Rechercher une offre" placeholder="Rechercher une offre..."
+             [ngModel]="recherche()" (ngModelChange)="recherche.set($event)" />
+    </label>
+    <label class="champ choix">
+      <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'brief' }" />
+      <select aria-label="Type de prestation" [ngModel]="type()" (ngModelChange)="type.set($event)">
+        <option value="">Type (Guide / Chauffeur)</option>
+        <option>Guide touristique</option>
+        <option>Chauffeur</option>
+      </select>
+      <span class="fleche"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'down' }" /></span>
+    </label>
+    <label class="champ choix">
+      <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'pin' }" />
+      <select aria-label="Zone" [ngModel]="zone()" (ngModelChange)="zone.set($event)">
+        <option value="">Zone</option>
+        @for (option of zones(); track option) { <option [value]="option">{{ option }}</option> }
+      </select>
+      <span class="fleche"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'down' }" /></span>
+    </label>
+    <label class="champ choix">
+      <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'calendar' }" />
+      <select aria-label="Disponibilité" [ngModel]="disponibilite()" (ngModelChange)="disponibilite.set($event)">
+        <option value="">Disponibilité</option>
+        <option value="mois">Ce mois du calendrier</option>
+        <option value="annee">Toute l’année</option>
+      </select>
+      <span class="fleche"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'down' }" /></span>
+    </label>
+    <button class="publier" type="button" (click)="ouvrir(dialogue, 'publier')">
+      <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'plus' }" />Publier une offre
+    </button>
+  </section>
+
+  <div role="status" [class.confirmation]="message()">{{ message() }}</div>
+
+  <div class="offres-grille">
+    <section class="liste" aria-label="Mes offres">
+      <div class="categories" aria-label="Catégories d’offres">
+        @for (categorie of types; track categorie.valeur) {
+          <button type="button" [class.active]="type() === categorie.valeur"
+                  [attr.aria-pressed]="type() === categorie.valeur" (click)="type.set(categorie.valeur)">
+            <ng-container *ngTemplateOutlet="icone; context: { $implicit: categorie.icone }" />
+            {{ categorie.label }} ({{ compter(categorie.valeur) }})
+          </button>
+        }
+      </div>
+      <div class="cartes">
+        @for (offre of resultats(); track offre.id) {
+          <article class="offre-ligne">
+            <img [src]="offre.image" alt="" />
+            <div class="offre-info">
+              <h2>{{ offre.titre }}</h2>
+              <p><ng-container *ngTemplateOutlet="icone; context: { $implicit: offre.type === 'Chauffeur' ? 'car' : 'person' }" />{{ offre.type }}</p>
+              <p><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'pin' }" />{{ offre.zone }}</p>
+              <p><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'calendar' }" />Disponible : {{ dates(offre) }}</p>
+            </div>
+            <span class="tarif-offre">{{ prix(offre.tarif) }}</span>
+            <span class="statut-offre" [class.attente]="offre.statut === 'En attente'">
+              <ng-container *ngTemplateOutlet="icone; context: { $implicit: offre.statut === 'Publiée' ? 'check' : 'wait' }" />
+              {{ offre.statut }}
+            </span>
+            <div class="offre-actions">
+              <button type="button" [attr.aria-label]="'Voir ' + offre.titre" (click)="ouvrir(dialogue, 'voir', offre)">
+                <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'eye' }" />
+              </button>
+              <button type="button" [attr.aria-label]="'Modifier ' + offre.titre" (click)="ouvrir(dialogue, 'modifier', offre)">
+                <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'edit' }" />
+              </button>
+              <button type="button" class="danger" [attr.aria-label]="'Supprimer ' + offre.titre" (click)="ouvrir(dialogue, 'supprimer', offre)">
+                <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'trash' }" />
+              </button>
+            </div>
+          </article>
+        } @empty {
+          <div class="vide">
+            <h2>Aucune offre trouvée</h2>
+            <button class="secondaire" type="button" (click)="reinitialiser()">Réinitialiser les filtres</button>
+          </div>
+        }
+      </div>
+    </section>
+
+    <aside class="calendrier" aria-label="Mes disponibilités">
+      <h2><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'calendar' }" />Mes disponibilités</h2>
+      <div class="mois">
+        <button type="button" aria-label="Mois précédent" (click)="changerMois(-1)"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'left' }" /></button>
+        <h3 aria-live="polite">{{ moisLibelle() }}</h3>
+        <button type="button" aria-label="Mois suivant" (click)="changerMois(1)"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'right' }" /></button>
+      </div>
+      <div class="calendrier-grille">
+        @for (jour of joursSemaine; track jour) { <span class="jour-semaine">{{ jour }}</span> }
+        @for (caseJour of cases(); track $index) {
+          @if (caseJour) {
+            @if (editionCalendrier()) {
+              <button type="button" class="jour" [class.disponible]="joursDisponibles().has(caseJour.date)"
+                      [attr.aria-label]="caseJour.jour + ' ' + moisLibelle()" [attr.aria-pressed]="joursDisponibles().has(caseJour.date)"
+                      (click)="basculerJour(caseJour.date)">{{ caseJour.jour }}</button>
+            } @else {
+              <span class="jour" [class.disponible]="joursDisponibles().has(caseJour.date)"
+                    [attr.aria-label]="joursDisponibles().has(caseJour.date) ? caseJour.jour + ' disponible' : null">{{ caseJour.jour }}</span>
+            }
+          } @else { <span aria-hidden="true"></span> }
+        }
+      </div>
+      @if (editionCalendrier()) {
+        <p class="aide">Sélectionnez les jours où vous êtes disponible.</p>
+        <div class="calendrier-actions edition">
+          <button type="button" class="secondaire" (click)="editionCalendrier.set(false)">Annuler</button>
+          <button type="button" class="secondaire" (click)="validerCalendrier()">Enregistrer</button>
+        </div>
+      } @else {
+        <div class="calendrier-actions">
+          <button type="button" class="secondaire" (click)="gererDisponibilites()">
+            <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'calendar' }" />Gérer mes disponibilités
+          </button>
+        </div>
+      }
+    </aside>
+  </div>
+</div>
+
+<dialog #dialogue aria-labelledby="titre-offre-dialogue">
+  @if (mode === 'publier' || mode === 'modifier') {
+    <form #edition="ngForm" class="dialogue" (ngSubmit)="enregistrer(dialogue)">
+      <h2 id="titre-offre-dialogue">{{ mode === 'publier' ? 'Publier une offre' : 'Modifier l’offre' }}</h2>
+      <label>Titre <input name="titre" required maxlength="120" [(ngModel)]="formulaire.titre" /></label>
+      <div class="champs-doubles">
+        <label>Type
+          <select name="typeOffre" required [(ngModel)]="formulaire.type"><option>Guide touristique</option><option>Chauffeur</option></select>
+        </label>
+        <label>Tarif par jour (DT) <input name="tarif" type="number" min="0" step="0.001" required [(ngModel)]="formulaire.tarif" /></label>
+      </div>
+      <label>Zone <input name="zoneOffre" required maxlength="120" [(ngModel)]="formulaire.zone" /></label>
+      <label>Services proposés <textarea name="description" maxlength="500" rows="3" [(ngModel)]="formulaire.description"></textarea></label>
+      <div class="champs-doubles">
+        <label>Disponible du <input name="debut" type="date" [(ngModel)]="formulaire.debut" /></label>
+        <label>Disponible au <input name="fin" type="date" [(ngModel)]="formulaire.fin" /></label>
+      </div>
+      <p class="aide">Laissez les deux dates vides pour indiquer une disponibilité toute l’année.</p>
+      @if (erreur) { <p role="alert" class="alerte">{{ erreur }}</p> }
+      <div class="dialogue-actions">
+        <button type="button" class="secondaire" (click)="dialogue.close()">Annuler</button>
+        <button type="submit" class="publier" [disabled]="edition.invalid">{{ mode === 'publier' ? 'Publier' : 'Enregistrer' }}</button>
+      </div>
+    </form>
+  } @else if (selection(); as offre) {
+    <section class="dialogue">
+      @if (mode === 'supprimer') {
+        <h2 id="titre-offre-dialogue">Supprimer l’offre ?</h2>
+        <p>« {{ offre.titre }} » sera retirée de votre liste.</p>
+        <div class="dialogue-actions">
+          <button type="button" class="secondaire" (click)="dialogue.close()">Annuler</button>
+          <button type="button" class="supprimer" (click)="supprimer(dialogue)">Supprimer</button>
+        </div>
+      } @else {
+        <h2 id="titre-offre-dialogue">{{ offre.titre }}</h2>
+        <p>{{ offre.description }}</p>
+        <p>{{ offre.type }} · {{ offre.zone }}</p>
+        <p>Disponible : {{ dates(offre) }}</p>
+        <span class="tarif-offre">{{ prix(offre.tarif) }}</span>
+        <div class="dialogue-actions"><button type="button" class="secondaire" (click)="dialogue.close()">Fermer</button></div>
+      }
+    </section>
+  }
+</dialog>

@@ -1,0 +1,63 @@
+<ng-template #icone let-nom>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path [attr.d]="icones[nom]" />
+  </svg>
+</ng-template>
+
+@if (section() === "invitations") {
+  <section class="panneau">
+    <div class="panneau-titre">
+      <h2><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'mail' }" />Mes invitations ({{ etat.enAttente() }})</h2>
+      @if (lienVisible()) {
+        <a routerLink="/professionnel/invitations" class="lien-action">Voir tout <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'arrow' }" /></a>
+      }
+    </div>
+    @for (mission of etat.missions; track mission.id) {
+      <article class="invitation">
+        <img [src]="mission.image" alt="" />
+        <div class="invitation-texte">
+          <h3>Invitation – {{ mission.titreInvitation }}</h3>
+          <p class="meta"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'calendar' }" />{{ mission.dates }}</p>
+        </div>
+        <div class="invitation-actions">
+          <span class="tarif">{{ etat.montant(etat.reponses()[mission.id]?.tarif ?? mission.tarifInvitation) }}</span>
+          @if (etat.reponses()[mission.id]; as reponse) {
+            <span class="statut" [class.refuse]="reponse.statut === 'Refusée'">{{ reponse.statut }}</span>
+          } @else {
+            <div class="repondre">
+              <button type="button" class="accepter" (click)="etat.ouvrir(mission, 'accepter')"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'check' }" />Accepter</button>
+              <button type="button" class="refuser" (click)="etat.refuser(mission.id)"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'close' }" />Refuser</button>
+            </div>
+          }
+        </div>
+      </article>
+    }
+  </section>
+} @else {
+  <section class="panneau">
+    <div class="panneau-titre">
+      <h2><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'calendar' }" />Mes offres de prestation</h2>
+      @if (lienVisible()) {
+        <a routerLink="/professionnel/offres" class="lien-action" [class.lien-bleu]="detailOffre()">Voir tout <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'arrow' }" /></a>
+      }
+    </div>
+    @if (offresEtat.publiees()[0]; as offre) {
+    <article class="offre">
+      <span class="avatar avatar-offre" aria-hidden="true">AB</span>
+      <div class="offre-texte">
+        <h3>{{ offre.titre }}</h3>
+        @if (detailOffre()) {
+          <p>{{ offre.description }}</p>
+        } @else {
+          <span class="tarif">{{ etat.montant(offre.tarif) }} / jour</span>
+        }
+      </div>
+      @if (detailOffre()) { <span class="tarif">{{ etat.montant(offre.tarif) }} / jour</span> }
+      <span class="statut">Publiée</span>
+    </article>
+    } @else {
+      <p class="offre">Aucune offre publiée.</p>
+    }
+  </section>
+}

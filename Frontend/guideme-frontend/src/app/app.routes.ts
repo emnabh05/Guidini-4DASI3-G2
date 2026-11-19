@@ -15,6 +15,16 @@ export const routes: Routes = [
   { path: 'signup', component: Signup },
   { path: 'touriste', component: Touriste },
   { path: 'prestataire', component: Prestataire },
+  {
+    path: 'prestataire/missions',
+    title: 'Gestion des missions | Guidini',
+    loadComponent: () => import('./ms4-missions-offers/espace-prestataire/gestion-missions').then((m) => m.GestionMissions),
+  },
+  {
+    path: '',
+    loadChildren: () => import('./ms4-missions-offers/espace-professionnel/espace-professionnel.routes')
+      .then((m) => m.routesProfessionnelles),
+  },
   { path: 'admin', component: AdminDashboard },
   { path: 'admin-legacy', component: AdminAccueil },
   ...['the-camp', 'trips', 'accommodation', 'experiences', 'activities'].map((path) => ({ path, component: SectionPage, data: { section: path } })),

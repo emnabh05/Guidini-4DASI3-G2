@@ -1,0 +1,242 @@
+app-espace-professionnel {
+  & {
+    --encre: #10134d;
+    --orange: #ff7900;
+    --orange-texte: #b94700;
+    --fond: #f5f7fb;
+    --bordure: #e0e7f6;
+    --ombre: 0 8px 18px #234b9420;
+    display: block;
+    min-height: 100dvh;
+    color: var(--encre);
+    background: var(--fond);
+    font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+    letter-spacing: -.025em;
+  }
+  
+  button, input, select { font: inherit; color: inherit; }
+  button { border: 0; background: none; }
+  button:focus-visible, a:focus-visible, summary:focus-visible, select:focus-visible, input:focus-visible {
+    outline: 3px solid #3875e6;
+    outline-offset: 3px;
+  }
+  svg { width: 1.25em; height: 1.25em; flex: none; vertical-align: middle; }
+  .ic-bouton { position: relative; display: grid; place-items: center; width: 39px; height: 39px; border-radius: 50%; }
+  .ic-bouton:hover { background: #edf3ff; }
+  .avatar {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: clamp(40px, 3.4vw, 58px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    color: #124279;
+    background: linear-gradient(145deg, #b1eaff, #84bbf5);
+    font-weight: 800;
+  }
+  
+  .banniere {
+    display: grid;
+    align-content: center;
+    gap: 8px;
+    min-height: clamp(135px, 9.15vw, 155px);
+    padding: 20px clamp(22px, 3.45vw, 58px);
+    background: linear-gradient(90deg, #f7f9fce8, #f7f9fcba 36%, transparent 66%), url('/prestataire/hero.jpg') right center / cover no-repeat;
+  }
+  .banniere h1 { font-size: clamp(2rem, 2.55vw, 2.8rem); line-height: 1.12; font-weight: 800; letter-spacing: -.055em; }
+  .banniere p { max-width: 54rem; font-size: clamp(1rem, 1.28vw, 1.35rem); font-weight: 650; }
+  .filtres {
+    display: grid;
+    grid-template-columns: minmax(220px, 2.4fr) minmax(124px, .9fr) minmax(142px, 1fr) minmax(198px, 1.5fr) auto;
+    align-items: center;
+    gap: clamp(10px, 1.3vw, 22px);
+    max-width: 92%;
+    padding: clamp(15px, 1.35vw, 23px) clamp(20px, 2.5vw, 42px);
+  }
+  .champ {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    height: clamp(46px, 3.35vw, 56px);
+    border: 1.5px solid var(--bordure);
+    border-radius: 14px;
+    background: #ffffffa8;
+  }
+  .champ > svg { position: absolute; left: 14px; width: 23px; height: 23px; pointer-events: none; }
+  .champ input, .champ select {
+    width: 100%;
+    height: 100%;
+    padding: 0 10px 0 46px;
+    background: transparent;
+    border: 0;
+    border-radius: inherit;
+    font-size: clamp(.86rem, 1.02vw, 1.05rem);
+    font-weight: 650;
+  }
+  .champ select { appearance: none; padding-right: 34px; cursor: pointer; text-overflow: ellipsis; }
+  .champ input::placeholder { color: #343960; opacity: 1; }
+  .fleche { position: absolute; right: 12px; pointer-events: none; }
+  .principal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    border-radius: 13px;
+    background: linear-gradient(#ff8200, #f87000);
+    color: #201342;
+    min-height: 46px;
+    padding: 10px 18px;
+    white-space: nowrap;
+    font-weight: 800;
+  }
+  .principal:hover { background: #ff931d; }
+  .principal:disabled { cursor: default; background: #e5edfa; color: #304576; }
+  .filtres > .principal { height: clamp(46px, 3.35vw, 56px); padding-inline: clamp(16px, 1.85vw, 31px); }
+  
+  .grille {
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(16px, 1.65vw, 28px);
+    padding: 4px clamp(18px, 1.9vw, 32px) 44px;
+  }
+  .liste-missions { display: grid; gap: 8px; padding-top: clamp(10px, 1.35vw, 23px); }
+  .carte-mission, .panneau, .vide {
+    border: 1px solid #f1f4fa;
+    border-radius: 19px;
+    background: #fff;
+    box-shadow: var(--ombre);
+  }
+  .carte-mission {
+    position: relative;
+    display: grid;
+    grid-template-columns: clamp(105px, 10.35vw, 174px) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(12px, 1.95vw, 33px);
+    min-height: clamp(140px, 9.9vw, 166px);
+    padding: clamp(14px, 1.3vw, 22px) clamp(40px, 3.35vw, 56px) clamp(14px, 1.3vw, 22px) clamp(14px, 1.3vw, 22px);
+  }
+  .photo-mission { width: 100%; aspect-ratio: 1.43; display: block; object-fit: cover; border-radius: 13px; }
+  .mission-texte { display: grid; gap: 10px; min-width: 0; }
+  h2, h3 { font-weight: 800; line-height: 1.19; }
+  .mission-texte h2 { font-size: clamp(1.12rem, 1.5vw, 1.58rem); letter-spacing: -.045em; }
+  .meta { display: inline-flex; align-items: center; gap: 7px; font-weight: 650; }
+  .meta svg { width: 1.25em; height: 1.25em; }
+  .mission-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 7px clamp(9px, 1.3vw, 24px); }
+  .mission-meta .meta { white-space: nowrap; }
+  .type, .tarif, .statut {
+    width: max-content;
+    border-radius: 99px;
+    padding: 6px 12px;
+    font-weight: 800;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  .type { background: #dfedff; color: #0755ba; font-size: .84rem; }
+  .tarif { background: #fff0dc; color: var(--orange-texte); font-size: 1rem; }
+  .mission-actions { display: grid; justify-items: center; gap: clamp(12px, 1.4vw, 24px); }
+  .mission-actions .tarif { font-size: clamp(1.06rem, 1.3vw, 1.35rem); padding: 7px 15px; }
+  .mission-actions .principal { min-width: clamp(110px, 10.15vw, 170px); }
+  .favori { position: absolute; top: 15px; right: 9px; font-size: 1.16rem; }
+  .favori.choisi { color: #cc254b; }
+  .favori.choisi svg { fill: currentColor; }
+  
+  .activite { display: grid; gap: clamp(15px, 1.4vw, 24px); }
+  .panneau { padding: 0 clamp(13px, 1.2vw, 21px) 12px; }
+  .panneau-titre { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: clamp(50px, 3.8vw, 65px); }
+  .panneau-titre h2 { display: flex; align-items: center; gap: 12px; font-size: clamp(1.06rem, 1.35vw, 1.45rem); letter-spacing: -.045em; }
+  .panneau-titre h2 svg { width: 1.5em; height: 1.5em; }
+  .lien-action { display: inline-flex; align-items: center; gap: 4px; color: var(--orange-texte); font-size: .9rem; font-weight: 800; white-space: nowrap; }
+  .lien-action:hover { text-decoration: underline; }
+  .invitation {
+    display: grid;
+    grid-template-columns: clamp(50px, 4.8vw, 80px) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    min-height: clamp(67px, 5.2vw, 88px);
+    padding: 7px 0;
+  }
+  .invitation + .invitation, .offre { border-top: 1px solid #edf1f9; }
+  .invitation img { width: 100%; aspect-ratio: 1.34; object-fit: cover; border-radius: 9px; }
+  .invitation-texte { display: grid; gap: 7px; }
+  .invitation h3 { font-size: clamp(.86rem, 1.04vw, 1.05rem); }
+  .invitation .meta { font-size: clamp(.77rem, .9vw, .95rem); }
+  .invitation-actions { display: grid; gap: 6px; justify-items: end; }
+  .invitation-actions .tarif { padding: 4px 10px; }
+  .repondre { display: flex; gap: 6px; }
+  .repondre button {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid;
+    border-radius: 7px;
+    padding: 5px 7px;
+    font-weight: 800;
+    font-size: .75rem;
+    white-space: nowrap;
+  }
+  .accepter { color: #106524; background: #effaf1; }
+  .accepter:hover { background: #d3f0da; }
+  .refuser { color: #b30f22; background: #fff1f1; }
+  .refuser:hover { background: #ffdedf; }
+  .statut { color: #146623; background: #e1f6e7; font-size: .9rem; }
+  .statut.refuse { color: #a92435; background: #ffe9ee; }
+  .offre { display: flex; align-items: center; gap: clamp(10px, 1.15vw, 19px); min-height: clamp(82px, 6.3vw, 105px); }
+  .avatar-offre { width: clamp(52px, 4.7vw, 79px); border-radius: 12px; font-size: 1.25rem; }
+  .offre-texte { flex: 1; display: grid; gap: 9px; }
+  .offre h3 { font-size: clamp(.95rem, 1.2vw, 1.24rem); }
+  .vide { display: grid; justify-items: center; gap: 12px; padding: 45px 16px; }
+  .vue-seule { display: grid; gap: 15px; max-width: 760px; padding: 24px clamp(18px, 3vw, 42px) 44px; }
+  .retour { justify-self: start; }
+  .confirmation { margin: 12px clamp(18px, 2vw, 34px) 0; padding: 11px 14px; border-radius: 9px; color: #146623; background: #e1f6e7; font-weight: 700; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  
+  dialog {
+    border: 0;
+    border-radius: 18px;
+    margin: auto;
+    padding: 0;
+    width: min(460px, calc(100% - 32px));
+    color: var(--encre);
+    box-shadow: 0 16px 54px #151a4e50;
+  }
+  dialog::backdrop { background: #12173877; }
+  .dialogue { display: grid; gap: 15px; padding: clamp(18px, 4vw, 28px); }
+  .dialogue label { display: grid; gap: 7px; font-weight: 750; }
+  .dialogue input { border: 1px solid #cbd5e9; border-radius: 8px; padding: 9px; }
+  .dialogue .note { color: #525d7a; font-size: .88rem; }
+  .dialogue-actions { display: flex; justify-content: flex-end; gap: 8px; }
+  .secondaire { border-radius: 9px; background: #eaf0fa; padding: 10px 15px; font-weight: 750; }
+  
+  @media (max-width: 1260px) {
+    .filtres { max-width: none; }
+    .grille { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
+    .mission-texte { font-size: .91rem; }
+    .invitation { gap: 7px; }
+  }
+  @media (max-width: 1000px) {
+    .grille { grid-template-columns: 1fr; }
+    .liste-missions { padding-top: 0; }
+    .activite { grid-template-columns: 1fr 1fr; }
+    .filtres { grid-template-columns: minmax(165px, 1.4fr) minmax(95px, .8fr) minmax(110px, 1fr) minmax(165px, 1.3fr) auto; }
+  }
+  @media (max-width: 760px) {
+    .banniere { background-position: 67% center; background-image: linear-gradient(90deg, #f7f9fcf2, #f7f9fca0 65%, transparent), url('/prestataire/hero.jpg'); }
+    .filtres { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .filtres .recherche { grid-column: 1 / -1; }
+    .activite { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 500px) {
+    .carte-mission { grid-template-columns: 82px minmax(0, 1fr); gap: 10px 12px; padding: 13px 13px 13px 12px; }
+    .mission-texte { padding-right: 24px; gap: 6px; }
+    .mission-actions { grid-column: 2; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; }
+    .mission-actions .principal { min-width: 0; min-height: 39px; padding: 7px 11px; }
+    .mission-actions .tarif { padding-inline: 8px; }
+    .favori { top: 5px; right: 3px; }
+    .invitation { grid-template-columns: 49px minmax(0, 1fr); gap: 6px 8px; }
+    .invitation-actions { grid-column: 2; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+    .panneau-titre h2 { gap: 6px; }
+  }
+  
+}

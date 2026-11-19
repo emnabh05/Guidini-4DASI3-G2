@@ -1,0 +1,174 @@
+:host {
+  display: block;
+  --bleu: #0655ed;
+  --bordure: #dae4f7;
+  --encre: #10134d;
+  --orange-texte: #a84000;
+}
+button, select, input, textarea { color: inherit; font: inherit; }
+button { cursor: pointer; }
+a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--bleu);
+  outline-offset: 3px;
+}
+svg { width: 1.28em; height: 1.28em; flex: none; vertical-align: middle; }
+.offres-page { padding: clamp(18px, 1.35vw, 24px) clamp(16px, 1.85vw, 32px) 38px; }
+.barre-filtres {
+  display: grid;
+  grid-template-columns: minmax(175px, 2fr) minmax(180px, 1.3fr) minmax(115px, .85fr) minmax(145px, 1fr) auto;
+  align-items: center;
+  gap: clamp(9px, 1.25vw, 22px);
+  margin: 0 0 clamp(18px, 1.6vw, 28px);
+}
+.champ { position: relative; display: grid; align-items: center; }
+.champ > svg { position: absolute; left: 15px; pointer-events: none; width: 23px; height: 23px; }
+.champ input, .champ select {
+  width: 100%;
+  height: clamp(46px, 3.35vw, 56px);
+  padding-inline: 46px 14px;
+  border: 1.5px solid var(--bordure);
+  border-radius: 13px;
+  background: #ffffffb5;
+  font-size: clamp(.88rem, 1.1vw, 1.08rem);
+  font-weight: 650;
+}
+.champ input::placeholder { color: #353a62; }
+.champ select { appearance: none; padding-right: 35px; text-overflow: ellipsis; cursor: pointer; }
+.fleche { position: absolute; right: 13px; pointer-events: none; }
+.publier, .secondaire, .supprimer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--bleu);
+  border-radius: 12px;
+  background: white;
+  color: #0646c5;
+  font-weight: 800;
+}
+.publier {
+  background: linear-gradient(#ff8200, #f86d00);
+  color: #211441;
+  border-color: transparent;
+}
+.barre-filtres > .publier { min-height: clamp(46px, 3.35vw, 56px); padding-inline: clamp(13px, 1.6vw, 27px); white-space: nowrap; }
+.publier:hover { background: #ff982a; }
+.publier:disabled { opacity: .55; cursor: default; }
+.secondaire:hover { background: #eaf2ff; }
+.supprimer { color: #a82131; border-color: #a82131; }
+.supprimer:hover { background: #fff0f2; }
+.confirmation { margin-bottom: 14px; padding: 10px 14px; border-radius: 9px; background: #e5f7e9; color: #116626; font-weight: 700; }
+
+.offres-grille {
+  display: grid;
+  grid-template-columns: minmax(0, 2.9fr) minmax(270px, 1fr);
+  align-items: stretch;
+  gap: clamp(14px, 1.4vw, 24px);
+}
+.liste { min-width: 0; }
+.categories { display: flex; flex-wrap: wrap; gap: clamp(8px, 1.2vw, 20px); padding: clamp(9px, .9vw, 15px) 9px clamp(12px, 1vw, 17px); }
+.categories button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  padding: 9px clamp(13px, 1.9vw, 33px);
+  min-height: clamp(41px, 3vw, 51px);
+  border: 1.5px solid var(--bordure); border-radius: 17px;
+  background: #fafcff;
+  font-size: clamp(.9rem, 1.12vw, 1.16rem); font-weight: 750;
+}
+.categories button:hover { background: #e7f0ff; }
+.categories button.active { background: var(--bleu); border-color: var(--bleu); color: white; }
+.cartes, .calendrier { border: 1px solid #f0f4fa; border-radius: 19px; background: white; box-shadow: 0 8px 18px #234b9420; }
+.cartes { padding-inline: clamp(14px, 1.4vw, 24px); }
+.offre-ligne {
+  display: grid;
+  grid-template-columns: clamp(92px, 9.8vw, 164px) minmax(0, 1.8fr) minmax(0, .88fr) minmax(0, .82fr) auto;
+  align-items: center;
+  gap: clamp(10px, 1.65vw, 28px);
+  min-height: clamp(124px, 9.3vw, 157px);
+  padding-block: 12px;
+}
+.offre-ligne + .offre-ligne { border-top: 1px solid #eaf0fa; }
+.offre-ligne img { width: 100%; aspect-ratio: 1.4; object-fit: cover; border-radius: 13px; }
+.offre-info { display: grid; gap: 5px; }
+.offre-info h2 { font-size: clamp(1.04rem, 1.49vw, 1.55rem); letter-spacing: -.045em; line-height: 1.16; font-weight: 800; }
+.offre-info p { display: flex; align-items: center; gap: 9px; font-size: clamp(.81rem, 1.03vw, 1.08rem); font-weight: 650; line-height: 1.23; }
+.tarif-offre, .statut-offre {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  width: max-content; border-radius: 999px; padding: 8px clamp(7px, .95vw, 16px);
+  font-size: clamp(.85rem, 1.25vw, 1.28rem); font-weight: 800; white-space: nowrap;
+}
+.tarif-offre, .statut-offre.attente { background: #fff0dc; color: var(--orange-texte); }
+.statut-offre { background: #e3f8e8; color: #116626; }
+.offre-actions { display: flex; gap: clamp(5px, .58vw, 10px); }
+.offre-actions button, .mois button {
+  display: grid; place-items: center; width: clamp(33px, 2.9vw, 50px); height: clamp(33px, 2.7vw, 46px);
+  border: 1.5px solid var(--bordure); border-radius: 12px; background: #fff;
+  font-size: clamp(.94rem, 1.1vw, 1.18rem);
+}
+.offre-actions button:hover, .mois button:hover { background: #eaf2ff; }
+.offre-actions .danger { color: #bc2034; border-color: #ff9ca6; }
+.offre-actions .danger:hover { background: #fff0f2; }
+.vide { display: grid; justify-items: center; gap: 14px; padding: 45px 12px; }
+.vide h2 { font-size: 1.2rem; }
+
+.calendrier { padding: clamp(14px, 1.4vw, 24px); }
+.calendrier h2 { display: flex; align-items: center; gap: 10px; font-size: clamp(1.14rem, 1.5vw, 1.54rem); letter-spacing: -.04em; font-weight: 800; }
+.calendrier h2 svg { width: 1.38em; height: 1.38em; }
+.mois { display: flex; justify-content: space-between; align-items: center; gap: 5px; margin-top: clamp(12px, 1.35vw, 23px); }
+.mois h3 { font-size: 1.12rem; text-transform: capitalize; }
+.mois button { border-color: transparent; }
+.calendrier-grille { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin-top: 7px; }
+.jour-semaine, .jour { display: grid; place-items: center; aspect-ratio: 1.25; font-size: clamp(.77rem, .97vw, .98rem); font-weight: 750; }
+.jour { border: 0; border-radius: 10px; background: transparent; }
+.jour.disponible { background: #d4e7ff; color: #0646c5; }
+button.jour:hover { box-shadow: inset 0 0 0 1px var(--bleu); }
+.calendrier-actions { display: grid; margin-top: clamp(22px, 3.4vw, 56px); }
+.calendrier-actions .secondaire { min-height: 53px; }
+.calendrier-actions.edition { grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.aide { color: #475475; font-size: .85rem; }
+.calendrier .aide { margin-top: 14px; }
+
+dialog {
+  width: min(520px, calc(100% - 28px)); max-height: calc(100% - 30px); margin: auto;
+  border: 0; border-radius: 18px; background: white; color: var(--encre); box-shadow: 0 16px 54px #151a4e50;
+}
+dialog::backdrop { background: #12173877; }
+.dialogue { display: grid; gap: 13px; padding: 22px; }
+.dialogue h2 { font-size: 1.45rem; font-weight: 800; }
+.dialogue label { display: grid; gap: 5px; font-size: .9rem; font-weight: 750; }
+.dialogue input, .dialogue select, .dialogue textarea {
+  width: 100%; min-width: 0; border: 1px solid #cbd5e9; border-radius: 8px; padding: 8px; background: white;
+}
+.champs-doubles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.dialogue-actions { display: flex; justify-content: end; gap: 8px; }
+.alerte { color: #a82131; font-weight: 700; }
+
+@media (max-width: 1280px) {
+  .offre-ligne { grid-template-columns: clamp(82px, 8vw, 113px) minmax(0, 1fr) auto auto; gap: 10px; }
+  .offre-actions { grid-column: 3 / -1; justify-content: end; }
+  .offre-ligne img, .offre-info { grid-row: span 2; }
+}
+@media (max-width: 980px) {
+  .offres-grille { grid-template-columns: 1fr; }
+  .calendrier { width: min(100%, 440px); }
+  .barre-filtres { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .barre-filtres .recherche { grid-column: span 2; }
+  .barre-filtres .publier { grid-column: 3; grid-row: 1; }
+}
+@media (max-width: 570px) {
+  .offre-ligne { grid-template-columns: 66px minmax(0, 1fr) auto; }
+  .offre-ligne img, .offre-info { grid-row: auto; }
+  .offre-info { grid-column: 2 / -1; }
+  .offre-ligne .tarif-offre { grid-column: 1 / 3; grid-row: 2; }
+  .offre-ligne .statut-offre { grid-column: 3; grid-row: 2; }
+  .offre-actions { grid-column: 2 / -1; }
+  .barre-filtres { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .barre-filtres .recherche { grid-column: 1 / -1; }
+  .barre-filtres .publier { grid-column: 2; grid-row: auto; }
+  .champ input, .champ select { padding-left: 35px; }
+  .champ > svg { left: 9px; width: 19px; height: 19px; }
+  .categories { padding-inline: 0; }
+  .categories button { padding-inline: 9px; gap: 4px; }
+}

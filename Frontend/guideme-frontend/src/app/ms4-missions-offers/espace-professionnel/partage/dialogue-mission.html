@@ -1,0 +1,35 @@
+<ng-template #icone let-nom>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path [attr.d]="icones[nom]" />
+  </svg>
+</ng-template>
+
+<dialog #dialogue aria-labelledby="titre-dialogue" (close)="etat.action.set(null)">
+  @if (etat.action(); as choix) {
+    @if (choix.type === 'details') {
+      <div class="dialogue">
+        <h2 id="titre-dialogue">{{ choix.mission.titre }}</h2>
+        <p class="meta"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'pin' }" />{{ choix.mission.lieu }}</p>
+        <p class="meta"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'calendar' }" />{{ choix.mission.dates }}</p>
+        <span class="type">{{ choix.mission.type }}</span>
+        <div class="dialogue-actions"><button type="button" class="secondaire" (click)="fermer()">Fermer</button></div>
+      </div>
+    } @else {
+    <form class="dialogue" (ngSubmit)="confirmer()">
+      <h2 id="titre-dialogue">{{ choix.type === 'accepter' ? 'Accepter l’invitation' : 'Postuler à la mission' }}</h2>
+      <p>{{ choix.mission.titre }} · {{ choix.mission.dates }}</p>
+      @if (choix.type === 'accepter') {
+        <label>Votre tarif proposé (DT)
+          <input name="tarifPropose" type="number" min="0" step="0.001" required [ngModel]="etat.tarifPropose()" (ngModelChange)="etat.tarifPropose.set($event)" />
+        </label>
+      }
+      <p class="note">Les actions de cette démo sont enregistrées uniquement sur cette page.</p>
+      <div class="dialogue-actions">
+        <button type="button" class="secondaire" (click)="fermer()">Annuler</button>
+        <button type="submit" class="principal">Confirmer</button>
+      </div>
+    </form>
+    }
+  }
+</dialog>

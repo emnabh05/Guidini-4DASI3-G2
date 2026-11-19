@@ -1,0 +1,157 @@
+<ng-template #icone let-nom>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path [attr.d]="icones[nom]" /></svg>
+</ng-template>
+
+<app-navbar-prestataire />
+
+<main>
+  <section class="banniere">
+    <h1>Gestion des missions</h1>
+    <p>Créez vos missions, recrutez des guides et chauffeurs et suivez leur avancement.</p>
+  </section>
+
+  <div class="contenu">
+    <section class="indicateurs" aria-label="Activité des missions">
+      <article><span class="bleu"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'brief' }" /></span><div><strong>{{ missions().length }}</strong><p>Missions</p></div></article>
+      <article><span class="orange"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'people' }" /></span><div><strong>{{ reponses() }}</strong><p>Réponses reçues</p></div></article>
+      <article><span class="violet"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'mail' }" /></span><div><strong>{{ invitations().length }}</strong><p>Invitations envoyées</p></div></article>
+      <article><span class="vert"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'check' }" /></span><div><strong>{{ compter('En cours') }}</strong><p>Missions en cours</p></div></article>
+    </section>
+
+    <div class="grille">
+      <section class="panneau missions">
+        <div class="panneau-titre">
+          <h2><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'calendar' }" />Mes missions</h2>
+          <button type="button" class="principal" (click)="ouvrir(dialogue, 'creation')">
+            <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'plus' }" />Créer une mission
+          </button>
+        </div>
+        <div class="onglets" aria-label="Filtrer les missions">
+          @for (filtre of filtres; track filtre.nom) {
+            <button type="button" [class.actif]="this.filtre() === filtre.valeur" [attr.aria-pressed]="this.filtre() === filtre.valeur"
+                    (click)="filtrer(filtre.valeur)">{{ filtre.nom }} ({{ compter(filtre.valeur) }})</button>
+          }
+        </div>
+        <div class="tableau">
+          <table>
+            <thead><tr><th>Mission</th><th>Lieu</th><th>Dates</th><th>Type</th><th>Candidatures</th><th>Statut</th><th>Actions</th></tr></thead>
+            <tbody>
+              @for (mission of visibles(); track mission.id) {
+                <tr>
+                  <th scope="row"><div class="mission"><img [src]="mission.image" alt="" /><span><b>{{ mission.titre }}</b><small>{{ mission.description }}</small></span></div></th>
+                  <td><span class="meta"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'pin' }" />{{ mission.lieu }}</span></td>
+                  <td><span class="meta"><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'calendar' }" />{{ periode(mission) }}</span></td>
+                  <td><span class="badge bleu"><ng-container *ngTemplateOutlet="icone; context: { $implicit: mission.type === 'Guide' ? 'person' : 'car' }" />{{ mission.type }}</span></td>
+                  <td class="compte">{{ mission.candidatures }}</td>
+                  <td><span class="badge" [class.vert]="mission.statut === 'En cours'" [class.bleu]="mission.statut === 'Publiée'"
+                            [class.orange]="mission.statut === 'En attente'">{{ mission.statut }}</span></td>
+                  <td><button type="button" class="icone-bouton" [attr.aria-label]="'Voir ' + mission.titre" (click)="ouvrir(dialogue, 'details', mission)">
+                    <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'eye' }" />
+                  </button></td>
+                </tr>
+              } @empty {
+                <tr><td colspan="7" class="vide">Aucune mission pour ce statut.</td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        @if (resultats().length > taillePage) {
+          <div class="pagination" aria-label="Pages des missions">
+            <button type="button" class="secondaire" [disabled]="page() === 0" (click)="page.update(pagePrecedente)">Précédent</button>
+            <span>{{ page() * taillePage + 1 }}–{{ page() * taillePage + visibles().length }} sur {{ resultats().length }}</span>
+            <button type="button" class="secondaire" [disabled]="(page() + 1) * taillePage >= resultats().length" (click)="page.update(pageSuivante)">Suivant</button>
+          </div>
+        }
+      </section>
+
+      <aside>
+        <section class="panneau" id="recherche">
+          <h2><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'person' }" />Recherche de professionnels</h2>
+          <fieldset>
+            <legend class="sr-only">Mode de recherche</legend>
+            <label><input type="radio" name="recherche" value="manuelle" [(ngModel)]="modeRecherche" />
+              <span><b>Sélection manuelle</b><small>Choisissez vous-même les guides ou chauffeurs.</small></span>
+            </label>
+            <label><input type="radio" name="recherche" value="automatique" [(ngModel)]="modeRecherche" />
+              <span><b>Recherche automatique</b><small>Trouvez des profils compatibles selon le lieu, la langue et le type.</small></span>
+            </label>
+          </fieldset>
+          <button type="button" class="principal recherche" (click)="ouvrir(dialogue, 'recherche')">
+            <ng-container *ngTemplateOutlet="icone; context: { $implicit: 'search' }" />Rechercher des professionnels
+          </button>
+        </section>
+        <section class="panneau">
+          <h2><ng-container *ngTemplateOutlet="icone; context: { $implicit: 'bars' }" />Suivi des missions</h2>
+          <div class="suivi">
+            <div class="anneau" [style.background]="graphique()" aria-hidden="true"><div><strong>{{ missions().length }}</strong><span>Missions</span></div></div>
+            <ul>
+              @for (statut of legende; track statut.valeur) {
+                <li><span class="point" [style.background]="statut.couleur"></span>{{ statut.nom }} ({{ compter(statut.valeur) }})</li>
+              }
+            </ul>
+          </div>
+        </section>
+      </aside>
+    </div>
+    <p class="sr-only" role="status">{{ message() }}</p>
+  </div>
+</main>
+
+<dialog #dialogue aria-labelledby="titre-gestion-dialogue">
+  @if (modeDialogue() === 'creation') {
+    <form class="dialogue" (ngSubmit)="creer(dialogue)">
+      <h2 id="titre-gestion-dialogue">Créer une mission</h2>
+      <label>Titre <input name="titre" required [(ngModel)]="formulaire.titre" /></label>
+      <label>Description <textarea name="description" rows="2" required [(ngModel)]="formulaire.description"></textarea></label>
+      <div class="champs">
+        <label>Lieu <input name="lieu" required [(ngModel)]="formulaire.lieu" /></label>
+        <label>Langue <input name="langue" required [(ngModel)]="formulaire.langue" /></label>
+        <label>Date de début <input type="date" name="debut" required [(ngModel)]="formulaire.debut" /></label>
+        <label>Date de fin <input type="date" name="fin" required [(ngModel)]="formulaire.fin" /></label>
+        <label>Type <select name="type" [(ngModel)]="formulaire.type"><option>Guide</option><option>Chauffeur</option></select></label>
+        <label>Postes <input type="number" name="postes" min="1" step="1" required [(ngModel)]="formulaire.postes" /></label>
+      </div>
+      @if (erreur) { <p role="alert">{{ erreur }}</p> }
+      <div class="dialogue-actions"><button type="button" class="secondaire" (click)="dialogue.close()">Annuler</button><button type="submit" class="principal">Créer</button></div>
+    </form>
+  } @else if (modeDialogue() === 'recherche') {
+    <section class="dialogue">
+      <h2 id="titre-gestion-dialogue">Recherche {{ modeRecherche }}</h2>
+      <label>Mission publiée
+        <select name="missionRecherche" [ngModel]="missionRecherche" (ngModelChange)="missionRecherche = $event; trouverProfils()">
+          <option [ngValue]="null">Choisir une mission</option>
+          @for (mission of missions(); track mission.id) {
+            @if (mission.statut === 'Publiée') { <option [ngValue]="mission.id">{{ mission.titre }}</option> }
+          }
+        </select>
+      </label>
+      <ul class="profils">
+        @for (profil of resultatsProfils; track profil.id) {
+          <li><span><b>{{ profil.nom }}</b><small>{{ profil.type }} · {{ profil.zone }} · {{ profil.tarif }} DT / jour</small></span>
+            <button type="button" class="secondaire" [disabled]="invite(profil.id)" (click)="inviter(profil.id)">{{ invite(profil.id) ? 'Invité' : 'Inviter' }}</button>
+          </li>
+        } @empty {
+          <li>Aucun profil compatible pour cette sélection.</li>
+        }
+      </ul>
+      <div class="dialogue-actions"><button type="button" class="secondaire" (click)="dialogue.close()">Fermer</button></div>
+    </section>
+  } @else if (selectee(); as mission) {
+    <section class="dialogue">
+      <h2 id="titre-gestion-dialogue">{{ mission.titre }}</h2>
+      <p>{{ mission.description }}</p>
+      <p>{{ mission.lieu }} · {{ periode(mission) }}</p>
+      <p>{{ mission.type }} · {{ mission.langue }} · {{ mission.postes }} poste(s) · {{ mission.candidatures }} candidature(s)</p>
+      <p><b>{{ mission.statut }}</b></p>
+      <div class="dialogue-actions">
+        <button type="button" class="secondaire" (click)="dialogue.close()">Fermer</button>
+        @if (mission.statut === 'Publiée' || mission.statut === 'En attente' || mission.statut === 'En cours') {
+          <button type="button" class="secondaire" (click)="changerStatut(mission, 'Annulée')">Annuler la mission</button>
+        }
+        @if (mission.statut === 'En attente') { <button type="button" class="principal" (click)="changerStatut(mission, 'Publiée')">Publier</button> }
+        @if (mission.statut === 'En cours') { <button type="button" class="principal" (click)="changerStatut(mission, 'Terminée')">Terminer</button> }
+      </div>
+    </section>
+  }
+</dialog>

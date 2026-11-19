@@ -14,6 +14,6 @@ export class App {
   /** Pages plein écran sans navbar/footer publics (inscription, espace admin). */
   get hideChrome() {
     const path = this.router.url.split(/[?#]/)[0];
-    return ['/register', '/signup'].includes(path) || path.startsWith('/admin') || path.startsWith('/touriste') || path.startsWith('/prestataire');
+    return ['/register', '/signup', '/missions', '/professionnel'].includes(path) || path.startsWith('/professionnel/') || path.startsWith('/admin') || path.startsWith('/touriste') || path.startsWith('/prestataire');
   }
 }

@@ -1,0 +1,39 @@
+<header class="top" [class.fixe]="fixe()">
+  <a routerLink="/prestataire" class="logo">
+    <svg width="38" height="50" viewBox="0 0 40 46" aria-hidden="true">
+      <path d="M20 0C9 0 1 8 1 18c0 12 19 28 19 28s19-16 19-28C39 8 31 0 20 0z" fill="#f26a1b" />
+      <path d="M29 11l-7 7-10-3-2 2 8 4-3 6-3 .5 1 2 4-1 4 1 .5-3 4-3 3 6 2-2-3-9 6-6c1-1 0-3-2-2z" fill="#fff" transform="translate(0 1) scale(.9)" />
+    </svg>
+    <span class="brand"><b>Guidini</b><small>Espace Prestataire</small></span>
+  </a>
+
+  <nav class="links" aria-label="Navigation prestataire">
+    @for (n of nav; track n.label) {
+      <a [routerLink]="n.route ?? null" [attr.href]="n.fragment ? n.route + '#' + n.fragment : n.route ?? n.href"
+         [fragment]="n.fragment" routerLinkActive="active"
+         [routerLinkActiveOptions]="{paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'exact'}"
+         ariaCurrentWhenActive="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          @for (p of n.paths; track p) { <path [attr.d]="p" /> }
+        </svg>
+        {{ n.label }}
+      </a>
+    }
+  </nav>
+
+  <a class="bell" routerLink="/prestataire/missions" fragment="recherche" aria-label="Recherche et invitations">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0112 0v6l2 2H4z" /><path d="M10 21h4" /></svg>
+    <i class="dot" aria-hidden="true"></i>
+  </a>
+  <span class="sep" aria-hidden="true"></span>
+  <button class="user um" type="button" (click)="menuOpen.set(!menuOpen())" [attr.aria-expanded]="menuOpen()">
+    <img src="/prestataire/avatar.jpg" alt="" />
+    <b>{{ agency }}</b>
+    <svg width="16" height="10" viewBox="0 0 12 8"><path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+  </button>
+@if (menuOpen()) {
+  <div class="menu um" role="menu">
+    <button type="button" class="logout" role="menuitem" (click)="logout()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" /></svg>Déconnexion</button>
+  </div>
+}
+</header>

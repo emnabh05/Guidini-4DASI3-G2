@@ -1,35 +1,32 @@
-import { Component, inject, HostListener, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { Session } from '../../ms1-users/session';
+import { Component, HostListener, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { NavbarPrestataire } from '../../ms4-missions-offers/espace-prestataire/navbar-prestataire';
 
 @Component({
   selector: 'app-prestataire',
-  imports: [RouterLink],
+  imports: [NavbarPrestataire, RouterLink],
   templateUrl: './prestataire.html',
   styleUrl: './prestataire.scss',
 })
 export class Prestataire {
-  private readonly session = inject(Session);
-  menuOpen = signal(false);
-  logout() { this.session.logout(); }
-  @HostListener('document:click', ['$event']) onDoc(e: Event) {
-    if (!(e.target as Element).closest('.um')) this.menuOpen.set(false);
+  private readonly router = inject(Router);
+  actionRapide(route?: string, parametres?: { action: string }): void {
+    if (route) void this.router.navigate([route], { queryParams: parametres });
   }
 
+  readonly nav = [
+    { label: 'Accueil', active: true, href: '#', paths: ['M3 11l9-8 9 8', 'M5 10v11h5v-7h4v7h5V10'] },
+    { label: 'Mes Produits', href: '#', paths: ['M12 3l8 4.5v9L12 21l-8-4.5v-9z', 'M4 7.5l8 4.5 8-4.5M12 12v9'] },
+    { label: 'Mes Offres', href: '#', paths: ['M3 12V4h8l10 10-8 8z', 'M7.5 8.5h.01'] },
+    { label: 'Mes Missions', route: '/prestataire/missions', paths: ['M3 8h18v12H3z', 'M8 8V5h8v3', 'M3 13h18'] },
+    { label: 'Réservations', href: '#reservations', paths: ['M3 5h18v16H3z', 'M3 10h18M8 3v4M16 3v4M7 14h2M11 14h2M15 14h2M7 18h2M11 18h2'] },
+    { label: 'Revenus', href: '#', paths: ['M4 20V14M4 20h16M9 20V9M14 20V5M19 20V11'] },
+  ];
   /** Maquette dessinée sur 1672 px de large : mise à l'échelle par `zoom`. */
   zoom = signal(typeof window !== 'undefined' ? window.innerWidth / 1672 : 1);
   @HostListener('window:resize') onResize() { this.zoom.set(window.innerWidth / 1672); }
 
   agency = 'Agence Tunivoyages';
-
-  nav = [
-    { label: 'Accueil', active: true, paths: ['M3 11l9-8 9 8', 'M5 10v11h5v-7h4v7h5V10'] },
-    { label: 'Mes Produits', paths: ['M12 3l8 4.5v9L12 21l-8-4.5v-9z', 'M4 7.5l8 4.5 8-4.5M12 12v9'] },
-    { label: 'Mes Offres', paths: ['M3 12V4h8l10 10-8 8z', 'M7.5 8.5h.01'] },
-    { label: 'Mes Missions', paths: ['M3 8h18v12H3z', 'M8 8V5h8v3', 'M3 13h18'] },
-    { label: 'Réservations', paths: ['M3 5h18v16H3z', 'M3 10h18M8 3v4M16 3v4M7 14h2M11 14h2M15 14h2M7 18h2M11 18h2'] },
-    { label: 'Revenus', paths: ['M4 20V14M4 20h16M9 20V9M14 20V5M19 20V11'] },
-  ];
 
   kpis = [
     { x: 35, w: 320, icon: 18, val: 108, badge: 227, value: '24', label: 'Réservations', trend: '+20%', cls: 'blue' },
@@ -47,7 +44,7 @@ export class Prestataire {
   actions = [
     { label: ['Ajouter', 'un produit'], primary: true, paths: ['M12 3v18M3 12h18'] },
     { label: ['Créer', 'une offre'], paths: ['M12 3l9 5-9 5-9-5z', 'M3 12.5l9 5 9-5', 'M3 17l9 5 9-5'] },
-    { label: ['Publier', 'une mission'], paths: ['M3 8h18v12H3z', 'M8 8V5h8v3', 'M3 13h18M11 13v2h2v-2'] },
+    { label: ['Publier', 'une mission'], route: '/prestataire/missions', parametres: { action: 'creer' }, paths: ['M3 8h18v12H3z', 'M8 8V5h8v3', 'M3 13h18M11 13v2h2v-2'] },
     { label: ['Consulter', 'mes réservations'], paths: ['M3 5h18v16H3z', 'M3 10h18M8 3v4M16 3v4M7 14h2M11 14h2M15 14h2M7 18h2M11 18h2'] },
   ];
 
