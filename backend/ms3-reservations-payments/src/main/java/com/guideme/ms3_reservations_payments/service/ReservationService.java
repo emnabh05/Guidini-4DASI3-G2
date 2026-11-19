@@ -79,6 +79,14 @@ public class ReservationService {
         return ReservationResponse.from(reservationRepository.save(reservation));
     }
 
+    @Transactional(readOnly = true)
+    public List<ReservationResponse> getReservations(StatutReservation statut) {
+        List<Reservation> reservations = (statut == null)
+                ? reservationRepository.findAll()
+                : reservationRepository.findByStatut(statut);
+        return reservations.stream().map(ReservationResponse::from).toList();
+    }
+
     public BigDecimal calculerMontant(BigDecimal prixUnitaire, int nombrePlaces) {
         return prixUnitaire.multiply(BigDecimal.valueOf(nombrePlaces));
     }
