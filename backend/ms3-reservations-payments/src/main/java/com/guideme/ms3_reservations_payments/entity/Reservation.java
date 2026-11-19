@@ -48,6 +48,18 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     private StatutReservation statut;
 
+    public void confirmer() {
+        this.statut = StatutReservation.CONFIRMEE;
+    }
+
+    public void annuler() {
+        this.statut = StatutReservation.ANNULEE;
+    }
+
+    public void expirer() {
+        this.statut = StatutReservation.EXPIREE;
+    }
+
     @PrePersist
     void avantCreation() {
         if (dateReservation == null) {
