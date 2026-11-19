@@ -1,0 +1,56 @@
+.page {
+  min-height: 100vh; padding: 110px 24px 60px; display: grid; place-items: center;
+  background: linear-gradient(180deg, #cfe6fb 0%, #8ec1ef 55%, #5fa3e0 100%);
+}
+.shell {
+  width: 100%; max-width: 1080px; display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  background: rgba(255,255,255,.35); border-radius: 30px; padding: 12px; backdrop-filter: blur(8px);
+  box-shadow: 0 30px 70px rgba(11, 42, 111, .25);
+}
+.visual {
+  position: relative; border-radius: 22px; overflow: hidden; min-height: 560px;
+  background: url('/auth-bg.jpg') center / cover no-repeat;
+  display: flex; align-items: flex-end;
+  &::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 35%, rgba(255,255,255,.92) 85%); }
+}
+.welcome { position: relative; z-index: 1; padding: 0 32px 36px; color: var(--navy);
+  h1 { font-size: clamp(28px, 3vw, 40px); line-height: 1.1; font-weight: 700;
+    em { font-family: 'Caveat', cursive; font-style: normal; font-size: 1.45em; color: var(--orange); } }
+  p { margin-top: 12px; font-weight: 500; line-height: 1.6; } }
+
+.card { background: #fff; border-radius: 22px; padding: 34px 38px; margin-left: 12px; align-self: stretch; display: flex; flex-direction: column; justify-content: center; }
+.tabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 2px solid #e6ecf5; margin-bottom: 26px;
+  a { text-align: center; padding: 12px; font-weight: 600; font-size: 17px; color: #5a6781; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: .2s;
+    &.active { color: var(--navy); border-color: var(--orange); } &:hover { color: var(--orange); } } }
+
+form { display: grid; gap: 14px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field { display: flex; align-items: center; gap: 12px; padding: 0 16px; height: 54px; background: #f6f9ff; border: 1.5px solid #dbe5f4; border-radius: 16px; transition: .2s;
+  svg { width: 22px; height: 22px; flex: none; fill: none; stroke: var(--navy); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: inherit; font-size: 15px; color: var(--navy); }
+  &:focus-within { border-color: var(--orange); background: #fff; box-shadow: 0 0 0 4px rgba(242,106,27,.12); }
+  &.err { border-color: #e5484d; background: #fff6f6; } }
+.eye { background: none; border: 0; display: grid; place-items: center; }
+.row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 13px; }
+.check { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #34415c; input { accent-color: var(--orange); width: 16px; height: 16px; } }
+.link { color: #1a56db; font-weight: 600; text-decoration: underline; font-size: 13px; &:hover { color: var(--orange); } }
+.roles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  label { display: flex; justify-content: center; gap: 6px; padding: 12px; border: 1.5px solid #dbe5f4; border-radius: 14px; font-size: 14px; font-weight: 500; cursor: pointer; transition: .2s;
+    input { display: none; } &.on { border-color: var(--orange); background: #fff3ea; color: var(--orange-dark); } } }
+.primary { height: 56px; border: 0; border-radius: 999px; background: var(--orange); color: #fff; font-size: 18px; font-weight: 600; margin-top: 4px;
+  box-shadow: 0 10px 22px rgba(242,106,27,.4); transition: .2s; &:hover { background: var(--orange-dark); transform: translateY(-2px); } }
+.error { color: #d92d3a; font-size: 13px; }
+.ok { margin-top: 14px; text-align: center; color: #1c8a4c; font-weight: 600; }
+.or { text-align: center; margin: 24px 0 14px; color: #34415c; font-size: 14px; font-weight: 500; position: relative;
+  &::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid #e6ecf5; }
+  span { position: relative; background: #fff; padding: 0 14px; } }
+.social { display: flex; justify-content: center; gap: 16px;
+  button { width: 84px; height: 48px; border-radius: 999px; background: #fff; border: 1.5px solid #dbe5f4; display: grid; place-items: center; transition: .2s;
+    svg { width: 24px; height: 24px; } &:hover { transform: translateY(-3px); box-shadow: 0 8px 18px rgba(11,42,111,.15); } } }
+
+@media (max-width: 860px) {
+  .shell { grid-template-columns: 1fr; }
+  .visual { min-height: 260px; }
+  .card { margin: 12px 0 0; padding: 26px 22px; }
+  .two { grid-template-columns: 1fr; }
+}

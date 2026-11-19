@@ -1,0 +1,90 @@
+﻿<header class="topbar">
+  <button
+    class="mobile-menu icon-button"
+    (click)="menuOpen.set(!menuOpen())"
+    aria-label="Menu"
+    [attr.aria-expanded]="menuOpen()"
+  >
+    <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" /></svg>
+  </button>
+  <label class="search"
+    ><svg viewBox="0 0 24 24">
+      <circle cx="10" cy="10" r="7" />
+      <path d="M15 15l6 6" /></svg
+    ><input
+      type="search"
+      aria-label="Rechercher dans le tableau de bord"
+      placeholder="Rechercher un utilisateur, une réservation, un produit..."
+      (input)="search.emit($any($event.target).value)"
+  /></label>
+  <div class="tools">
+    <button
+      class="icon-button notification"
+      (click)="action.emit('Notifications')"
+      aria-label="Notifications"
+    >
+      <svg viewBox="0 0 24 24"><path d="M6 17V10a6 6 0 0112 0v7l2 2H4zM10 22h4" /></svg
+      ><i></i></button
+    ><button class="icon-button" (click)="action.emit('Aide')" aria-label="Aide">
+      <svg viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M9 8a3 3 0 016 1c0 2-3 2-3 5M12 18h.01" />
+      </svg></button
+    ><button class="logout-btn" type="button" (click)="logout()" aria-label="Déconnexion" title="Déconnexion"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" /></svg></button
+    ><span class="divider"></span
+    ><button class="profile" (click)="action.emit('Profil administrateur')">
+      <svg class="avatar" viewBox="0 0 40 40">
+        <circle cx="20" cy="20" r="20" fill="#102c51" stroke="none" />
+        <circle cx="20" cy="14" r="7" fill="white" stroke="none" />
+        <path d="M8 33c0-13 24-13 24 0" fill="white" stroke="none" /></svg
+      ><b>Admin</b><svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg>
+    </button>
+  </div>
+</header>
+<aside class="side" [class.open]="menuOpen()" (keydown.escape)="menuOpen.set(false)">
+  <a routerLink="/" class="brand"
+    ><span class="pin"
+      ><svg viewBox="0 0 24 24">
+        <path d="M4 11l6 1 7-8 2 1-5 9 2 6-2 1-4-6-6-2z" fill="white" stroke="none" /></svg></span
+    ><span><b>Guidini</b><small>Administration</small></span></a
+  >
+  <nav aria-label="Administration">
+    @for (n of nav(); track n.label) {
+      <button [class.active]="selected() === n.label" (click)="navigate(n.label)">
+        <svg viewBox="0 0 24 24"><path [attr.d]="n.icon" /></svg><span>{{ n.label }}</span>
+        @if (n.label === 'Utilisateurs' || n.label === 'Produits & Offres') {
+          <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg>
+        }
+      </button>
+    }
+  </nav>
+  <svg class="monument" viewBox="0 0 275 175" aria-hidden="true">
+    <defs>
+      <linearGradient id="stone" x2="0" y2="1">
+        <stop stop-color="#f4f8ff" />
+        <stop offset="1" stop-color="#8da6c9" />
+      </linearGradient>
+    </defs>
+    <g fill="url(#stone)" stroke="none">
+      <path d="M0 146Q110 113 275 132V175H0Z" />
+      <path d="M81 137V110h70V91h14V78h68v12h13v43h29v42H75Z" />
+      <path d="M171 77a27 27 0 0154 0Z" />
+      <path d="M194 51V39h5v12Z" />
+      <path d="M196 36h2v10h-2Z" />
+      <path d="M191 40h12v2h-12Z" />
+      <path d="M46 140l7-75h5l3 75Z" />
+      <path
+        d="M55 69Q26 50 32 72Q40 62 51 72Q24 68 28 87Q38 72 51 76Q37 85 40 98L56 78Q62 86 72 96Q75 79 61 73Q74 70 86 82Q81 63 62 68Q79 49 61 57L56 66Q53 48 45 51Z"
+      />
+      <path d="M112 29q9-8 19 1q8-10 18-5q-13-1-17 10q-8-8-20-6Z" />
+    </g>
+    <g fill="#6f8bab">
+      <path d="M187 132v-20a11 11 0 0122 0v20Z" />
+      <path d="M95 120v-8a4 4 0 018 0v8ZM121 122v-8a4 4 0 018 0v8ZM236 118v-8a4 4 0 018 0v8Z" />
+    </g>
+    <g stroke="#c8d8ed" stroke-width="3"><path d="M154 89h88M164 78h66M84 107h65" /></g>
+  </svg>
+</aside>
+@if (menuOpen()) {
+  <button class="scrim" (click)="menuOpen.set(false)" aria-label="Fermer le menu"></button>
+}

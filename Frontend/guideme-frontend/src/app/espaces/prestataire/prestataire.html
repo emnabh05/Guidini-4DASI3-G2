@@ -1,0 +1,150 @@
+<div class="page" [style.zoom]="zoom()">
+
+<header class="top">
+  <a routerLink="/prestataire" class="logo">
+    <svg width="38" height="50" viewBox="0 0 40 46" aria-hidden="true">
+      <path d="M20 0C9 0 1 8 1 18c0 12 19 28 19 28s19-16 19-28C39 8 31 0 20 0z" fill="#f26a1b" />
+      <path d="M29 11l-7 7-10-3-2 2 8 4-3 6-3 .5 1 2 4-1 4 1 .5-3 4-3 3 6 2-2-3-9 6-6c1-1 0-3-2-2z" fill="#fff" transform="translate(0 1) scale(.9)" />
+    </svg>
+    <span class="brand"><b>Guidini</b><small>Espace Prestataire</small></span>
+  </a>
+
+  <nav class="links">
+    @for (n of nav; track n.label) {
+      <a href="#" [class.active]="n.active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          @for (p of n.paths; track p) { <path [attr.d]="p" /> }
+        </svg>
+        {{ n.label }}
+      </a>
+    }
+  </nav>
+
+  <button class="bell" type="button" aria-label="Notifications">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0112 0v6l2 2H4z" /><path d="M10 21h4" /></svg>
+    <i class="dot"></i>
+  </button>
+  <span class="sep"></span>
+  <button class="user um" type="button" (click)="menuOpen.set(!menuOpen())" [attr.aria-expanded]="menuOpen()">
+    <img src="/prestataire/avatar.jpg" alt="" />
+    <b>{{ agency }}</b>
+    <svg width="16" height="10" viewBox="0 0 12 8"><path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+  </button>
+@if (menuOpen()) {
+  <div class="menu um" role="menu">
+    <button type="button" class="logout" role="menuitem" (click)="logout()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" /></svg>Déconnexion</button>
+  </div>
+}
+</header>
+
+<section class="hero">
+  <h1>Bienvenue,<br />{{ agency }} <span class="wave">👋</span></h1>
+  <p>Gérez vos produits, offres, missions et réservations<br />en toute simplicité sur Guidini.</p>
+</section>
+
+@for (k of kpis; track k.label) {
+  <article class="kpi" [class]="'kpi ' + k.cls" [style.left.px]="k.x" [style.width.px]="k.w">
+    <img class="ic" [src]="'/prestataire/kpi' + ($index + 1) + '.jpg'" alt="" [style.left.px]="k.icon" />
+    <b class="v" [style.left.px]="k.val">{{ k.value }}</b>
+    <span class="l" [style.left.px]="k.val">{{ k.label }}</span>
+    @if (k.trend) {
+      <span class="up" [style.left.px]="k.badge">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 12V2M2.5 6.5L7 2l4.5 4.5" /></svg>{{ k.trend }}
+      </span>
+    }
+  </article>
+}
+
+<!-- Évolution des réservations -->
+<section class="card evo">
+  <svg class="ico-t" viewBox="0 0 24 24" fill="none" stroke="#0b2a6f" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V13M4 20h16M9 20V8M14 20V4M19 20V11" /></svg>
+  <h2>Évolution des réservations</h2>
+  <button class="period" type="button">6 derniers mois
+    <svg width="14" height="9" viewBox="0 0 12 8"><path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+  </button>
+  <svg class="chart" width="672" height="270" viewBox="0 0 672 270">
+    <defs>
+      <linearGradient id="ar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f7cf6" stop-opacity=".28" /><stop offset="1" stop-color="#2f7cf6" stop-opacity=".04" /></linearGradient>
+    </defs>
+    @for (t of yTicks; track t.v) {
+      <text [attr.x]="61" [attr.y]="t.y + 6" text-anchor="end" class="ax">{{ t.v }}</text>
+      <line x1="77" x2="642" [attr.y1]="t.y" [attr.y2]="t.y" [attr.stroke]="t.v === 0 ? '#c9d3e6' : '#eef2f9'" />
+    }
+    <line x1="77" x2="77" y1="76" y2="229" stroke="#e1e8f4" />
+    <path [attr.d]="areaPath" fill="url(#ar)" />
+    <path [attr.d]="linePath" fill="none" stroke="#2f7cf6" stroke-width="2.6" stroke-linecap="round" />
+    @for (p of points; track $index) {
+      <circle [attr.cx]="p[0]" [attr.cy]="p[1]" r="5" fill="#2f7cf6" stroke="#fff" stroke-width="1.5" />
+    }
+    @for (m of months; track m; let i = $index) {
+      <text [attr.x]="points[i][0]" y="252" text-anchor="middle" class="ax">{{ m }}</text>
+    }
+  </svg>
+</section>
+
+<!-- Missions -->
+<section class="card mis">
+  <svg class="ico-t" viewBox="0 0 24 24" fill="none" stroke="#0b2a6f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h18v12H3z" /><path d="M8 8V5h8v3" /><path d="M3 13h18" /></svg>
+  <h2>Mes missions en cours</h2>
+  <a href="#" class="all">Voir tout <svg width="17" height="13" viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h15M10 1l6 6-6 6" /></svg></a>
+  @for (m of missions; track m.title; let i = $index) {
+    <div class="mi" [style.top.px]="i * 88 + 81">
+      <img [src]="'/prestataire/mission' + (i + 1) + '.jpg'" alt="" />
+      <b>{{ m.title }}</b>
+      <span class="dt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4M7 14h2M11 14h2M15 14h2" /></svg>{{ m.date }}</span>
+      <span class="pill" [class]="'pill ' + m.cls">{{ m.status }}</span>
+    </div>
+  }
+  <i class="hr"></i>
+</section>
+
+<!-- Répartition -->
+<section class="card rep">
+  <svg class="ico-t" viewBox="0 0 24 24" fill="none" stroke="#0b2a6f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8" /><path d="M12 8v5l3 2M10 2h4M18 4l1.5 1.5" /></svg>
+  <h2>Répartition de mon activité</h2>
+  <svg class="donut" width="406" height="264" viewBox="0 0 406 264">
+    <g transform="translate(118 152) rotate(-90)" fill="none" stroke-width="30">
+      <circle r="73" stroke="#1a7cff" stroke-dasharray="229.3 458.7" />
+      <circle r="73" stroke="#ff9500" stroke-dasharray="128.4 458.7" stroke-dashoffset="-229.3" />
+      <circle r="73" stroke="#8b5cf6" stroke-dasharray="100.9 458.7" stroke-dashoffset="-357.7" />
+    </g>
+  </svg>
+  <div class="center"><b>18</b><span>Produits</span></div>
+  @for (g of legend; track g.label; let i = $index) {
+    <div class="lg" [style.top.px]="i * 38.5 + 98"><i [style.background]="g.color"></i>{{ g.label }}</div>
+  }
+</section>
+
+<!-- Actions rapides -->
+<section class="card act">
+  <svg class="ico-t" viewBox="0 0 24 24" fill="none" stroke="#0b2a6f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z" /></svg>
+  <h2>Actions rapides</h2>
+  @for (a of actions; track a.label[1]; let i = $index) {
+    <button type="button" class="tile" [class.primary]="a.primary" [style.left.px]="[23, 176, 324, 472][i]" [style.width.px]="[142, 138, 137, 144][i]">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        @for (p of a.paths; track p) { <path [attr.d]="p" /> }
+      </svg>
+      <span>{{ a.label[0] }}<br />{{ a.label[1] }}</span>
+    </button>
+  }
+</section>
+
+<!-- Dernières réservations -->
+<section class="card res">
+  <svg class="ico-t" viewBox="0 0 24 24" fill="none" stroke="#0b2a6f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4M7 14h2M11 14h2M15 14h2M7 18h2M11 18h2" /></svg>
+  <h2>Mes dernières réservations</h2>
+  <a href="#" class="all">Voir tout <svg width="17" height="13" viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h15M10 1l6 6-6 6" /></svg></a>
+  @for (r of reservations; track r.title; let i = $index) {
+    <div class="rv" [style.top.px]="i * 80 + 63">
+      <img [src]="r.img" alt="" />
+      <b [style.left.px]="i ? 161 : 164">{{ r.title }}</b>
+      <span class="dt" [style.left.px]="i ? 372 : 368"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4M7 14h2M11 14h2M15 14h2" /></svg>{{ r.date }}</span>
+      <span class="pe" [style.left.px]="i ? 532 : 526"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="9" cy="8" r="3" /><path d="M3 20c0-5 12-5 12 0M16 5a3 3 0 010 6M18 15c2 .8 3 2.5 3 5" /></svg>{{ r.people }}</span>
+      <b class="price" [style.left.px]="i ? 699 : 711">{{ r.price }}</b>
+      <span class="pill st" [class]="'pill st ' + r.cls">{{ r.status }}</span>
+    </div>
+  }
+  <i class="hr"></i>
+</section>
+
+</div>

@@ -1,0 +1,13 @@
+.footer { background: var(--navy); color: #cfd8f0; margin-top: 40px; }
+.top { max-width: 1280px; margin: 0 auto; padding: 60px 24px 40px; display: grid; gap: 40px; grid-template-columns: 1.6fr repeat(4, 1fr); }
+.about { .logo b { font-size: 34px; color: #fff; letter-spacing: -1px; } small { display: block; color: var(--orange); margin: 4px 0 14px; font-size: 12px; }
+  p { font-size: 14px; line-height: 1.7; max-width: 320px; } }
+.social { display: flex; gap: 10px; margin-top: 20px;
+  a { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,.1); color: #fff; display: grid; place-items: center; font-weight: 600; transition: .2s;
+    &:hover { background: var(--orange); transform: translateY(-3px); } } }
+h4 { color: #fff; margin-bottom: 16px; font-size: 16px; }
+ul { list-style: none; display: grid; gap: 10px; font-size: 14px; }
+.col a:hover { color: var(--orange); }
+.bottom { border-top: 1px solid rgba(255,255,255,.12); max-width: 1280px; margin: 0 auto; padding: 20px 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 13px;
+  .legal { display: flex; gap: 20px; a:hover { color: var(--orange); } } }
+@media (max-width: 1000px) { .top { grid-template-columns: 1fr 1fr; } .about { grid-column: 1 / -1; } }

@@ -1,0 +1,45 @@
+<section class="hero" [style.background-image]="'linear-gradient(90deg, rgba(11,42,111,.88), rgba(11,42,111,.45)), url(' + section().hero + ')'">
+  <div class="in">
+    <small>{{ section().kicker }}</small>
+    <h1>{{ section().title }}</h1>
+    <p>{{ section().lead }}</p>
+    <div class="jump">
+      @for (b of section().blocks; track b.id) {
+        <a [routerLink]="['/', section().key]" [fragment]="b.id">{{ b.title }}</a>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="blocks">
+  @for (b of section().blocks; track b.id; let i = $index) {
+    <article class="block" [id]="b.id" [class.rev]="i % 2 === 1">
+      <div class="pic" [style.background-image]="'url(' + b.img + ')'"></div>
+      <div class="txt">
+        <span class="num">0{{ i + 1 }}</span>
+        <h2>{{ b.title }}</h2>
+        <p>{{ b.text }}</p>
+        <ul>
+          @for (p of b.points; track p) { <li>{{ p }}</li> }
+        </ul>
+      </div>
+    </article>
+  }
+</section>
+
+<section class="more">
+  <h3>Explorer aussi</h3>
+  <div class="chips">
+    @for (s of all; track s.key) {
+      @if (s.key !== section().key) { <a [routerLink]="['/', s.key]">{{ s.label }}</a> }
+    }
+  </div>
+</section>
+
+<section class="cta">
+  <div>
+    <h2>{{ section().cta.title }}</h2>
+    <p>{{ section().cta.text }}</p>
+  </div>
+  <a [routerLink]="section().cta.link" class="btn">{{ section().cta.button }} →</a>
+</section>

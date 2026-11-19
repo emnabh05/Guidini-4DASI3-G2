@@ -1,0 +1,118 @@
+<section class="hero">
+  <div class="stage">
+    <h1 class="sr">Découvrez la Tunisie avec Guidini</h1>
+    <p class="sr">Activités authentiques, circuits uniques et expériences inoubliables, en toute simplicité.</p>
+
+    <form class="search" (ngSubmit)="search()">
+      <input class="f dest" name="dest" [(ngModel)]="destination" placeholder=" " aria-label="Destination" autocomplete="off" />
+      <input class="f date" name="date" [type]="dateType" (focus)="dateType = 'date'" [(ngModel)]="date" placeholder=" " aria-label="Dates" />
+      <input class="f trav" name="trav" type="number" min="1" [(ngModel)]="travelers" placeholder=" " aria-label="Voyageurs" />
+      <button type="submit" class="go" aria-label="Rechercher"></button>
+    </form>
+
+    @for (c of categories; track c.label; let i = $index) {
+      <button type="button" class="chip" [class]="'chip c' + i" [attr.aria-label]="c.label"></button>
+    }
+  </div>
+</section>
+
+<section class="featured">
+  <div class="head">
+    <h2>✨ Nos expériences à la une</h2>
+    <a href="#">Voir tout →</a>
+  </div>
+  <div class="grid">
+    @for (e of experiences; track e.title) {
+      <article class="card">
+        <div class="photo" [style.background-image]="'url(' + e.img + ')'">
+          <button class="fav" aria-label="Favori">♡</button>
+          <h3>{{ e.title }}</h3>
+        </div>
+        <div class="meta">
+          <div class="row"><span>🏛️ {{ e.cat }} • {{ e.duration }}</span></div>
+          <div class="row">
+            <span><b class="star">★</b> <b>{{ e.rating }}</b> ({{ e.reviews }} avis)</span>
+            <span class="price">À partir de <b>{{ e.price }} DT</b></span>
+          </div>
+        </div>
+      </article>
+    }
+  </div>
+</section>
+
+<section class="trust">
+  @for (t of trust; track t.label) {
+    <div class="t">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#1a56db" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        @for (p of t.paths; track p) { <path [attr.d]="p" /> }
+      </svg>
+      <b>{{ t.label }}</b>
+    </div>
+  }
+</section>
+
+<section class="block">
+  <div class="title">
+    <small>Destinations</small>
+    <h2>Explorez la Tunisie, région par région</h2>
+    <p>Des médinas millénaires aux dunes du Sahara, trouvez l’endroit qui vous ressemble.</p>
+  </div>
+  <div class="dest-grid">
+    @for (d of destinations; track d.name) {
+      <a href="#" class="dest-card" [style.background]="d.bg">
+        <span class="emoji">{{ d.emoji }}</span>
+        <div><h3>{{ d.name }}</h3><p>{{ d.count }} expériences</p></div>
+      </a>
+    }
+  </div>
+</section>
+
+<section class="block steps-wrap">
+  <div class="title">
+    <small>Simple et rapide</small>
+    <h2>Comment ça marche ?</h2>
+  </div>
+  <div class="steps">
+    @for (s of steps; track s.title; let i = $index) {
+      <div class="step">
+        <div class="num">{{ i + 1 }}</div>
+        <h3>{{ s.title }}</h3>
+        <p>{{ s.text }}</p>
+      </div>
+    }
+  </div>
+</section>
+
+<section class="promo">
+  <div>
+    <small>Offre spéciale</small>
+    <h2>-20% sur votre premier circuit</h2>
+    <p>Réservez avant la fin du mois et profitez d’une réduction exclusive sur nos circuits guidés.</p>
+  </div>
+  <a href="#" class="cta">Découvrir les offres →</a>
+</section>
+
+<section class="block">
+  <div class="title">
+    <small>Témoignages</small>
+    <h2>Ils ont vécu la Tunisie avec Guidini</h2>
+  </div>
+  <div class="reviews">
+    @for (r of reviews; track r.name) {
+      <figure class="review">
+        <div class="stars">★★★★★</div>
+        <blockquote>« {{ r.text }} »</blockquote>
+        <figcaption><span class="avatar">{{ r.name[0] }}</span><div><b>{{ r.name }}</b><small>{{ r.from }}</small></div></figcaption>
+      </figure>
+    }
+  </div>
+</section>
+
+<section class="newsletter">
+  <h2>Recevez nos meilleures idées de voyage</h2>
+  <p>Inscrivez-vous et ne manquez aucune offre ni nouveau circuit.</p>
+  <form (ngSubmit)="subscribe()">
+    <input name="email" type="email" [(ngModel)]="email" placeholder="Votre adresse e-mail" required />
+    <button type="submit">{{ subscribed ? '✓ Merci !' : 'S’abonner' }}</button>
+  </form>
+</section>
