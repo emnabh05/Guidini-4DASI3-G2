@@ -1,0 +1,50 @@
+<section class="hero">
+  <h1>Découvrez la <em>Tunisie</em><br>avec Guidini</h1>
+  <p>Activités authentiques, circuits uniques et expériences<br>inoubliables, en toute simplicité.</p>
+
+  <div class="recherche">
+    <div class="champ">📍 <input placeholder="Où voulez-vous aller ?" /></div>
+    <div class="champ">📅 <input placeholder="Dates" /></div>
+    <div class="champ">👥 <input placeholder="Voyageurs" /></div>
+    <button class="btn-rechercher">🔍 Rechercher</button>
+  </div>
+
+  <div class="categories">
+    @for (c of categories; track c.label) {
+      <button class="chip">{{ c.icone }} {{ c.label }}</button>
+    }
+  </div>
+</section>
+
+<section class="une">
+  <div class="une-titre">
+    <h2>Nos expériences à la une</h2>
+    <a role="button">Voir tout →</a>
+  </div>
+
+  <div class="cartes">
+    @for (e of experiences; track e.titre) {
+      <article class="carte">
+        <div class="photo">
+          <img [src]="e.image" [alt]="e.titre" />
+          <span class="coeur">♡</span>
+          <h3>{{ e.titre }}</h3>
+        </div>
+        <div class="infos">
+          <span>🏛️ {{ e.categorie }} · {{ e.duree }}</span>
+          <span class="prix-texte">À partir de {{ e.prix }} DT</span>
+        </div>
+        <div class="infos">
+          <span>⭐ <strong>{{ e.note }}</strong> ({{ e.avis }} avis)</span>
+          <span class="badge-prix">À partir de {{ e.prix }} DT</span>
+        </div>
+      </article>
+    }
+  </div>
+</section>
+
+<section class="garanties">
+  @for (g of garanties; track g.label) {
+    <div class="garantie"><span>{{ g.icone }}</span> {{ g.label }}</div>
+  }
+</section>

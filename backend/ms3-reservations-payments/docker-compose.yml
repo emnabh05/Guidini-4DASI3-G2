@@ -1,0 +1,15 @@
+services:
+  ms3-db:
+    image: mysql:8
+    container_name: ms3-mysql
+    environment:
+      MYSQL_DATABASE: ms3_db
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: ms3-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
