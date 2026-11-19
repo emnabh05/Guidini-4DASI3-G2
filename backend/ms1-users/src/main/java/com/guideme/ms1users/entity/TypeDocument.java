@@ -1,0 +1,6 @@
+package com.guideme.ms1users.entity;
+
+public enum TypeDocument {
+    CIN, PASSEPORT, CARTE_PRO_GUIDE, PERMIS_CONDUIRE, LICENCE_TRANSPORT,
+    CARTE_GRISE, ASSURANCE, LICENCE_AGENCE, REGISTRE_COMMERCE
+}
