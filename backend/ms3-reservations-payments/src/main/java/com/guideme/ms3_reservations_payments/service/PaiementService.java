@@ -10,6 +10,7 @@ import com.guideme.ms3_reservations_payments.exception.ConflictException;
 import com.guideme.ms3_reservations_payments.exception.ResourceNotFoundException;
 import com.guideme.ms3_reservations_payments.repository.PaiementRepository;
 import com.guideme.ms3_reservations_payments.repository.ReservationRepository;
+import com.guideme.ms3_reservations_payments.messaging.ReservationEventPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ public class PaiementService {
 
     private final PaiementRepository paiementRepository;
     private final ReservationRepository reservationRepository;
+    private final ReservationEventPublisher eventPublisher;
 
     @Transactional
     public PaiementResponse effectuerPaiement(PaiementRequest req) {
@@ -48,6 +50,7 @@ public class PaiementService {
 
         reservation.confirmer();
         reservationRepository.save(reservation);
+        eventPublisher.publierReservationConfirmee(reservation);
 
         return PaiementResponse.from(paiement);
     }
