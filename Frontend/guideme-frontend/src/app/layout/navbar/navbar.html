@@ -1,0 +1,21 @@
+<header class="navbar">
+  <a routerLink="/" class="logo">
+    <span class="pin">📍</span>
+    <span>
+      <strong>Guidini</strong>
+      <small>Explore · Réservez · Vivez la Tunisie</small>
+    </span>
+  </a>
+
+  <nav class="menu">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">🏠 Accueil</a>
+    @for (l of liens; track l.label) {
+      <a role="button">{{ l.icone }} {{ l.label }}</a>
+    }
+  </nav>
+
+  <div class="actions">
+    <button class="btn-outline">👤 Se connecter</button>
+    <a routerLink="/inscription" class="btn-orange">👤 S'inscrire</a>
+  </div>
+</header>
