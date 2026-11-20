@@ -15,7 +15,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.guideme.ms3_reservations_payments.dto.AnnulationResponse;
+import com.guideme.ms3_reservations_payments.repository.PaiementRepository;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +28,7 @@ import java.util.List;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final PaiementRepository paiementRepository;
 
     @Value("${ms3.prix-unitaire-defaut:50}")
     private BigDecimal prixUnitaireDefaut;
@@ -74,8 +79,63 @@ public class ReservationService {
         return ReservationResponse.from(reservationRepository.save(reservation));
     }
 
+    @Transactional(readOnly = true)
+    public List<ReservationResponse> getReservations(StatutReservation statut) {
+        List<Reservation> reservations = (statut == null)
+                ? reservationRepository.findAll()
+                : reservationRepository.findByStatut(statut);
+        return reservations.stream().map(ReservationResponse::from).toList();
+    }
+
     public BigDecimal calculerMontant(BigDecimal prixUnitaire, int nombrePlaces) {
         return prixUnitaire.multiply(BigDecimal.valueOf(nombrePlaces));
+    }
+
+    @Value("${ms3.expiration-minutes:15}")
+    private long expirationMinutes;
+
+    @Transactional
+    public AnnulationResponse annulerReservation(Long id) {
+        Reservation reservation = trouver(id);
+        if (reservation.getStatut() == StatutReservation.ANNULEE
+                || reservation.getStatut() == StatutReservation.EXPIREE) {
+            throw new ConflictException("Réservation déjà " + reservation.getStatut());
+        }
+
+        int pourcentage = 0;
+        if (reservation.getStatut() == StatutReservation.CONFIRMEE) {
+            boolean dansLes24h = reservation.getDateReservation().plusHours(24).isAfter(LocalDateTime.now());
+            pourcentage = dansLes24h ? 100 : 50;
+        }
+        BigDecimal rembourse = reservation.getMontantTotal()
+                .multiply(BigDecimal.valueOf(pourcentage))
+                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+
+        reservation.annuler();
+        reservationRepository.save(reservation);
+        return new AnnulationResponse(reservation.getIdReservation(), reservation.getStatut(),
+                pourcentage, rembourse);
+    }
+
+    @Transactional
+    public void supprimerReservation(Long id) {
+        Reservation reservation = trouver(id);
+        if (reservation.getStatut() != StatutReservation.ANNULEE
+                && reservation.getStatut() != StatutReservation.EXPIREE) {
+            throw new ConflictException("Seule une réservation ANNULEE ou EXPIREE peut être supprimée");
+        }
+        paiementRepository.deleteAll(paiementRepository.findByIdReservation(id));
+        reservationRepository.delete(reservation);
+    }
+
+    @Transactional
+    public int expirerReservationsNonPayees() {
+        LocalDateTime limite = LocalDateTime.now().minusMinutes(expirationMinutes);
+        List<Reservation> aExpirer = reservationRepository
+                .findByStatutAndDateReservationBefore(StatutReservation.EN_ATTENTE_PAIEMENT, limite);
+        aExpirer.forEach(Reservation::expirer);
+        reservationRepository.saveAll(aExpirer);
+        return aExpirer.size();
     }
 
     Reservation trouver(Long id) {

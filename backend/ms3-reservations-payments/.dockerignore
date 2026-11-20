@@ -1,0 +1,5 @@
+target
+.git
+.vscode
+HELP.md
+docker-compose.yml
