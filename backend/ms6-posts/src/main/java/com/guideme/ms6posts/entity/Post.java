@@ -1,6 +1,7 @@
 
 package com.guideme.ms6posts.entity;
 
+import com.guideme.ms6posts.enums.StatutPost;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -23,7 +24,8 @@ public class Post {
 
     private LocalDateTime dateCreation;
 
-    private String statut;
+    @Enumerated(EnumType.STRING)
+    private StatutPost statut;
 
     // Constructors
     public Post() {
@@ -79,11 +81,11 @@ public class Post {
         this.dateCreation = dateCreation;
     }
 
-    public String getStatut() {
+    public StatutPost getStatut() {
         return statut;
     }
 
-    public void setStatut(String statut) {
+    public void setStatut(StatutPost statut) {
         this.statut = statut;
     }
 }
