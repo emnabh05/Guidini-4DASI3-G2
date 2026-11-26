@@ -1,0 +1,158 @@
+<section class="hero">
+  <div class="in">
+    <small>Communauté Guidini</small>
+    <h1>Partagez vos aventures en Tunisie</h1>
+    <p>Récits de voyage, bons plans et questions : publiez, commentez et échangez avec les autres voyageurs.</p>
+  </div>
+</section>
+
+<div class="page">
+  <!-- barre d'outils -->
+  <div class="toolbar">
+    <div class="tabs" role="tablist">
+      @for (f of filtres; track f.label) {
+        <button type="button" role="tab" [class.on]="filtre() === f.statut" [attr.aria-selected]="filtre() === f.statut" (click)="choisirFiltre(f.statut)">{{ f.label }}</button>
+      }
+    </div>
+    <label class="moi">
+      Utilisateur n°
+      <input type="number" min="1" [ngModel]="idAuteur()" (ngModelChange)="changerAuteur($event)" aria-label="Mon identifiant" />
+    </label>
+  </div>
+
+  @if (info()) { <div class="toast ok">{{ info() }}</div> }
+  @if (erreur()) {
+    <div class="toast ko">
+      {{ erreur() }}
+      <button type="button" (click)="erreur.set('')" aria-label="Fermer">×</button>
+    </div>
+  }
+
+  <!-- nouvelle publication -->
+  <div class="card composer" [class.open]="composerOuvert()">
+    @if (!composerOuvert()) {
+      <button type="button" class="ouvrir" (click)="composerOuvert.set(true)">
+        <span class="avatar">{{ initiale(idAuteur()) }}</span>
+        <span>Quoi de neuf ? Partagez votre expérience…</span>
+      </button>
+    } @else {
+      <form #f="ngForm" (ngSubmit)="publier(f)" novalidate>
+        <h2>Nouvelle publication</h2>
+        <input name="titre" [(ngModel)]="nouveau.titre" required maxlength="255" placeholder="Titre" #titre="ngModel" />
+        @if (titre.invalid && titre.touched) { <span class="err">Le titre est obligatoire</span> }
+        <textarea name="contenu" [(ngModel)]="nouveau.contenu" required rows="5" placeholder="Racontez…" #contenu="ngModel"></textarea>
+        @if (contenu.invalid && contenu.touched) { <span class="err">Le contenu est obligatoire</span> }
+        <input name="imageUrl" [(ngModel)]="nouveau.imageUrl" maxlength="255" placeholder="Lien d'une image (optionnel)" />
+        @if (nouveau.imageUrl) { <img class="apercu" [src]="nouveau.imageUrl" alt="Aperçu" /> }
+        <div class="actions">
+          <label class="check"><input type="checkbox" name="brouillon" [(ngModel)]="nouveau.brouillon" /> Enregistrer comme brouillon</label>
+          <span class="spacer"></span>
+          <button type="button" class="btn ghost" (click)="composerOuvert.set(false)">Annuler</button>
+          <button type="submit" class="btn solid" [disabled]="envoiPost()">{{ envoiPost() ? 'Envoi…' : (nouveau.brouillon ? 'Enregistrer' : 'Publier') }}</button>
+        </div>
+      </form>
+    }
+  </div>
+
+  <!-- fil -->
+  @if (chargement()) {
+    <div class="vide">Chargement des publications…</div>
+  } @else if (nbPosts() === 0 && !erreur()) {
+    <div class="vide">Aucune publication pour l'instant. Soyez le premier à partager !</div>
+  }
+
+  @for (p of posts(); track p.idPost) {
+    <article class="card post">
+      <header>
+        <span class="avatar">{{ initiale(p.idAuteur) }}</span>
+        <div class="meta">
+          <b>Utilisateur n°{{ p.idAuteur }}</b>
+          <small>{{ p.dateCreation | date: 'd MMM y, HH:mm' }}</small>
+        </div>
+        <span class="badge" [class]="'badge ' + p.statut.toLowerCase()">{{ libelleStatut[p.statut] }}</span>
+      </header>
+
+      @if (enEdition() === p.idPost) {
+        <div class="edit">
+          <input [(ngModel)]="edition.titre" placeholder="Titre" maxlength="255" />
+          <textarea [(ngModel)]="edition.contenu" rows="5" placeholder="Contenu"></textarea>
+          <input [(ngModel)]="edition.imageUrl" placeholder="Lien d'une image (optionnel)" maxlength="255" />
+          <div class="actions">
+            <span class="spacer"></span>
+            <button type="button" class="btn ghost" (click)="enEdition.set(null)">Annuler</button>
+            <button type="button" class="btn solid" [disabled]="!edition.titre.trim() || !edition.contenu.trim()" (click)="enregistrerEdition(p)">Enregistrer</button>
+          </div>
+        </div>
+      } @else {
+        <h3>{{ p.titre }}</h3>
+        <p class="texte">{{ p.contenu }}</p>
+        @if (p.imageUrl) { <img class="photo" [src]="p.imageUrl" [alt]="p.titre" loading="lazy" /> }
+      }
+
+      <footer>
+        <button type="button" class="lien" (click)="basculerCommentaires(p)">
+          💬 {{ ouverts().has(p.idPost) ? 'Masquer' : 'Voir' }} les commentaires
+          @if (commentaires()[p.idPost]; as cs) { ({{ cs.length }}) }
+        </button>
+        <span class="spacer"></span>
+        @if (p.statut !== 'ARCHIVE' && enEdition() !== p.idPost) {
+          <button type="button" class="lien" (click)="ouvrirEdition(p)">Modifier</button>
+        }
+        @if (p.statut === 'BROUILLON') { <button type="button" class="lien" (click)="changerStatut(p, 'PUBLIE')">Publier</button> }
+        @if (p.statut === 'PUBLIE') { <button type="button" class="lien" (click)="changerStatut(p, 'ARCHIVE')">Archiver</button> }
+        @if (p.statut === 'ARCHIVE') { <button type="button" class="lien" (click)="changerStatut(p, 'PUBLIE')">Republier</button> }
+        <button type="button" class="lien danger" (click)="supprimer(p)">Supprimer</button>
+      </footer>
+
+      @if (ouverts().has(p.idPost)) {
+        <div class="commentaires">
+          @for (item of fil(p.idPost); track item.c.idCommentaire) {
+            <div class="com" [style.margin-left.px]="item.niveau * 28">
+              <span class="avatar sm">{{ initiale(item.c.idAuteur) }}</span>
+              <div class="bulle">
+                <div class="tete">
+                  <b>Utilisateur n°{{ item.c.idAuteur }}</b>
+                  <small>{{ item.c.dateCreation | date: 'd MMM, HH:mm' }}</small>
+                </div>
+                @if (commentaireEdite() === item.c.idCommentaire) {
+                  <textarea [(ngModel)]="texteEdite" rows="2"></textarea>
+                  <div class="mini">
+                    <button type="button" (click)="enregistrerCommentaire(item.c)">Enregistrer</button>
+                    <button type="button" (click)="commentaireEdite.set(null)">Annuler</button>
+                  </div>
+                } @else {
+                  <p>{{ item.c.contenu }}</p>
+                  <div class="mini">
+                    @if (p.statut === 'PUBLIE') { <button type="button" (click)="repondre(p, item.c)">Répondre</button> }
+                    <button type="button" (click)="editerCommentaire(item.c)">Modifier</button>
+                    <button type="button" class="danger" (click)="supprimerCommentaire(item.c)">Supprimer</button>
+                  </div>
+                }
+              </div>
+            </div>
+          } @empty {
+            <p class="aucun">Pas encore de commentaire.</p>
+          }
+
+          @if (p.statut === 'PUBLIE') {
+            <form class="ecrire" (ngSubmit)="commenter(p)">
+              @if (reponseA()[p.idPost]; as parent) {
+                <div class="reponse-a">
+                  Réponse à l'utilisateur n°{{ parent.idAuteur }}
+                  <button type="button" (click)="repondre(p, null)" aria-label="Annuler la réponse">×</button>
+                </div>
+              }
+              <div class="ligne">
+                <span class="avatar sm">{{ initiale(idAuteur()) }}</span>
+                <input [name]="'c' + p.idPost" [(ngModel)]="saisie[p.idPost]" placeholder="Écrire un commentaire…" />
+                <button type="submit" class="btn solid" [disabled]="!(saisie[p.idPost] || '').trim()">Envoyer</button>
+              </div>
+            </form>
+          } @else {
+            <p class="aucun">Les commentaires sont fermés : cette publication n'est pas publiée.</p>
+          }
+        </div>
+      }
+    </article>
+  }
+</div>
